@@ -5,6 +5,7 @@
 
 (defsystem :cl-randist
   :description "Random Distribution Generation"
+  :depends-on (:cl-desc-stat)
   :version "0.1"
   :author "Leonardo Varuzza <varuzza@gmail.com>"
   :license "GPLv3"
@@ -13,5 +14,7 @@
 	       (:file "randist")
 	       (:file "normal-ziggurat")
 	       (:file "randist-gamma")
-	       (:file "randist-gamma-mt")))
+	       (:file "randist-gamma-mt")
+	       (:file "tests")))
+
 	       

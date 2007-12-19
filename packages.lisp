@@ -1,5 +1,5 @@
 (in-package :cl-user)
 
 (defpackage :random-distributions
-  (:use :cl)
+  (:use :cl :desc-stat)
   (:nicknames :randist))

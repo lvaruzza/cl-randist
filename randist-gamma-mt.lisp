@@ -8,7 +8,7 @@
 ;;  by Brian Gough
 
 
-(declaim (optimize (speed 3) (debug 0) (safety 0) (space 0) (compilation-speed 0)))
+(declaim (optimize (speed 3) (debug 0) (safety 2) (space 0) (compilation-speed 0)))
 
 
 ;; double
@@ -60,7 +60,7 @@
 	     (v 0d0)
 	     (u 0d0)
 	     (d (- a (/ 3d0)))
-	     (c (/ (/ 3d0) (sqrt d))))
+ 	     (c (/ (/ 3d0) (sqrt d))))
 
 	(declare (double-float x v u d c))
 	(tagbody
@@ -75,7 +75,7 @@
 	   
 	   (when (< u (- 1d0 (* 0.0331 x x x x)))
 	     (go end))
-	   (when (< (log u) (+ (* 0.5 x x) (* d (+ 1 (- v) (log v)))))
+	   (when (< (log u) (+ (* 0.5 x x) (* d (+ 1 (- v) (the double-float (log v))))))
 	     (go end))
 	   (go start)
 	 end)
