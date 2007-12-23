@@ -16,7 +16,7 @@
 ;; }
 
 (declaim (ftype (function (double-float double-float) double-float) random-beta))
-(defun beta (a b)
+(defun random-beta (a b)
   (declare (double-float a b))
   (let ((x1 (random-gamma a 1d0))
 	(x2 (random-gamma b 1d0)))
