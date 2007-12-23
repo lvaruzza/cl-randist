@@ -12,8 +12,9 @@
   :serial t
   :components ((:file "packages")
 	       (:file "randist")
-	       (:file "normal-ziggurat")
+	       (:file "randist-normal")
 	       (:file "randist-gamma")
+	       (:file "randist-beta")
 	       (:file "tests")))
 
 	       
