@@ -14,7 +14,6 @@
 	       (:file "randist")
 	       (:file "normal-ziggurat")
 	       (:file "randist-gamma")
-	       (:file "randist-gamma-mt")
 	       (:file "tests")))
 
 	       

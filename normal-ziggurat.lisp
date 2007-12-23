@@ -23,7 +23,7 @@
 ;;  See also Leong et al, "A Comment on the Implementation of the
 ;;  Ziggurat Method", Journal of Statistical Software, vol 5 (2005), no 7.
 
-(declaim (optimize (speed 3) (debug 0) (safety 2) (space 0) (compilation-speed 0)))
+(declaim (optimize (speed 3) (debug 2) (safety 2) (space 0) (compilation-speed 0)))
 
 
 ;; position of right-most step 
@@ -237,3 +237,9 @@
      end)
 
     (+ (* sign sigma x) mean)))
+
+(declaim (inline random-normal))
+
+(defun random-normal (&optional (mean 0d0) (sigma 1d0))
+  (random-normal-ziggurat mean sigma))
+  
