@@ -18,25 +18,10 @@
 ;;  (genlist #'(lambda (x) (declare (ignore x)) (random-normal)) n))
 
 
-(defun gen-gamma-large (&optional (n 100) (a 20))
-  (let ((a  (coerce a 'double-float)))
-    (genlist #'(lambda (x) (declare (ignore x)) (gamma-large a) n))))
-
-(defun gen-gamma-int (&optional (n 100) (a 5))
-  (genlist #'(lambda (x) (declare (ignore x)) (gamma-int a)) n))
-
-(defun gen-gamma-frac (&optional (n 100) (a 0.5d0))
-  (genlist #'(lambda (x) (declare (ignore x)) (gamma-frac a)) n))
-
-
-(defun gen-gamma (&optional (n 100) (a 5.5d0) (b 2d0))
-  (genlist #'(lambda (x) (declare (ignore x)) (random-gamma1 a b)) n))
-
-(defun gen-zigg (&optional (n 100) (m 0d0) (sigma 1d0))
-  (genlist #'(lambda (x) (declare (ignore x)) (random-normal-ziggurat m sigma)) n))
-
-(defun gen-gamma-mt (&optional (n 100) (a 5.5d0) (b 2d0))
-  (genlist #'(lambda (x) (declare (ignore x)) (random-gamma-mt a b)) n))
+(defun test-dist (f &optional (n 1000))
+  (let ((lst (genlist f n)))
+    (values (mean lst)
+	    (var lst))))
 
 (defvar *n* (* 1000 1000))
 (defun test-gamma-speed (&optional (n *n*))
