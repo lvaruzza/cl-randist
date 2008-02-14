@@ -15,6 +15,8 @@
 	       (:file "randist-normal")
 	       (:file "randist-gamma")
 	       (:file "randist-beta")
+	       (:file "randist-binomial")
+	       (:file "randist-multinomial")
 	       (:file "tests")))
 
 	       

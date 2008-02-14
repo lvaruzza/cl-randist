@@ -4,7 +4,7 @@
 
 (defun genlist (f n)
   (loop for i from 1 to n
-       collect(funcall f i)))
+       collect (funcall f i)))
 
 (defun gen-uniform (&optional (n 100) (max 1.0))
   (genlist #'(lambda (x) (declare (ignore x)) (random max)) n))
@@ -20,8 +20,8 @@
 
 (defun test-dist (f &optional (n 1000))
   (let ((lst (genlist f n)))
-    (values (mean lst)
-	    (var lst))))
+    (values (float (mean lst))
+	    (float (var lst)))))
 
 (defvar *n* (* 1000 1000))
 (defun test-gamma-speed (&optional (n *n*))
@@ -35,6 +35,10 @@
 (defun test-zigg-speed (&optional (n *n*))
   (time (dotimes (i n)
 	  (random-normal-ziggurat 0d0 1d0))))
+
+(defun test-binomial (&optional (n *n*))
+  (test-dist #'(lambda (x)
+		 (random-binomial 0.3d0 10)) n))
 
 (defun profile-gamma (&optional (n (* 100 1000)))
   (sb-profile:reset)

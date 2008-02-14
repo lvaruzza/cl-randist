@@ -1,6 +1,6 @@
 (in-package :randist)
 
-(declaim (optimize (speed 0) (safety 3) (debug 3)))
+(declaim (optimize (speed 3) (safety 1) (debug 0)))
 
 ;; /* The binomial distribution has the form,
 
@@ -50,33 +50,36 @@
 
 (defun random-binomial (p n)
   (let ((a 0) (b 0) (k 0)
-	(X 0d0))
+	(X 0d0)
+	(p p) (n n))
 
 ;;    (declaim (fixnum i a b k)
 ;;	     (double-float X))
+    (declare (type fixnum n a b k)
+	     (type double-float p X))
     
     (tagbody
      start
-       (setf a (1+ (floor n 2)))
-       (setf b (1+ (- n a)))
+       (setf a (+ 1 (floor n 2)))
+       (setf b (+ 1 (- n a)))
        
        (setf X (random-beta (coerce a 'double-float)
 			    (coerce b 'double-float)))
 
        (if (>= X p)
 	   (progn
-	     (setf n (1- a))
+	     (setf n (- a 1))
 	     (setf p (/ p X)))
 	   (progn
 	     (incf k a)
-	     (setf n (1- b))
+	     (setf n (- b 1))
 	     (setf p (/ (- p X) (- 1d0 X)))))
 
        (when (> n 10)
 	 (go start)))
 
     (loop
-       for i from 0 to (1- n)
+       for i fixnum from 0 to (- n 1)
        for u = (random-uniform)
        when (< u p)
        do (incf k))
