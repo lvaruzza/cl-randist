@@ -89,10 +89,8 @@ gsl_ran_multinomial (const gsl_rng * r, const size_t K,
     (random-multinomial1 NN p n)
     n))
 
-(defun test-multinomial (&optional (k 10000))
+(defun test-multinomial1 (nn p &optional (k 10000))
   (let ((r (make-array 3 :initial-element nil ))
-	(p #(0.7d0 0.2d0 0.1d0))
-	(nn 100)
 	(n (make-array 3 :element-type 'integer :adjustable nil)))
     (loop for i from 0 to k
 	 do (progn
@@ -107,4 +105,5 @@ gsl_ran_multinomial (const gsl_rng * r, const size_t K,
 		    (float (var (aref r j)))
 		    (* nn (aref p j) (- 1d0 (aref p j)))))))
 
-		    
+(defun test-multinomial (&optional (k 10000))
+  (test-multinomial1 100 #(0.7d0 0.2d0 0.1d0) k))

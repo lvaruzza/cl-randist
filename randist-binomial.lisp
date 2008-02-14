@@ -46,16 +46,16 @@
 ;;   return k;
 ;; }
 
-(declaim (ftype (function (double-float fixnum) fixnum) random-binomial))
+(declaim (ftype (function (double-float integer) integer) random-binomial))
 
 (defun random-binomial (p n)
   (let ((a 0) (b 0) (k 0)
 	(X 0d0)
 	(p p) (n n))
 
-;;    (declaim (fixnum i a b k)
+;;    (declaim (integer i a b k)
 ;;	     (double-float X))
-    (declare (type fixnum n a b k)
+    (declare (type integer n a b k)
 	     (type double-float p X))
     
     (tagbody
@@ -79,7 +79,7 @@
 	 (go start)))
 
     (loop
-       for i fixnum from 0 to (- n 1)
+       for i integer from 0 to (- n 1)
        for u = (random-uniform)
        when (< u p)
        do (incf k))
