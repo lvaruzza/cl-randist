@@ -1,3 +1,5 @@
+(in-package :randist)
+
 ;; An implementation of the Alias Method.
 ;;
 ;; NOTE: Additional comments, and an updated, more accurate version

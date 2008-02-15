@@ -5,8 +5,7 @@
 
 (defsystem :cl-randist
   :description "Random Distribution Generation"
-  :depends-on (:cl-desc-stat)
-  :version "0.1"
+  :version "0.2"
   :author "Leonardo Varuzza <varuzza@gmail.com>"
   :license "GPLv3"
   :serial t
@@ -16,7 +15,8 @@
 	       (:file "randist-gamma")
 	       (:file "randist-beta")
 	       (:file "randist-binomial")
-	       (:file "randist-multinomial")
+	       (:file "desc-stat")
+	       (:file "randist-multinomial")	       
 	       (:file "tests")))
 
 	       

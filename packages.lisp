@@ -1,7 +1,7 @@
 (in-package :cl-user)
 
 (defpackage :random-distributions
-  (:use :cl :desc-stat)
+  (:use :cl)
   (:nicknames :randist)
   (:export
    random-uniform
