@@ -100,7 +100,21 @@
 	  (setf (aref cnt i)
 		(/ (aref cnt i) runs)))))
 
-    (values p cnt)))
+    (loop
+       for i from 0 to 10
+       for j = (random n)
+       do (progn
+	    (format t "~d:~6t~5e~6t~5e~%" j (aref p j) (aref cnt j))))
+
+    (let ((res2 (loop 
+		   for i from 0 to (1- n)
+		   for res = (- (aref p i) (aref cnt i))
+		   sum (* res res) into acc
+		   finally (progn 
+			     (format t "acc:~a ~a ~%" acc n)
+			     (return acc)))))
+      
+      (sqrt (/ res2 n)))))
 
 ;;; Copyright (c) 2006, Mario S. Mommer <m_mommer@yahoo.com>
 

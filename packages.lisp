@@ -15,4 +15,6 @@
 
    random-beta
    random-binomial
-   random-multinomial))
+   random-multinomial
+
+   make-discrete-random-var))
