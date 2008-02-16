@@ -16,7 +16,8 @@
 	       (:file "randist-beta")
 	       (:file "randist-binomial")
 	       (:file "desc-stat")
-	       (:file "randist-multinomial")	       
+	       (:file "randist-multinomial")
+	       (:file "alias_method")
 	       (:file "tests")))
 
 	       
