@@ -18,6 +18,7 @@
 	       (:file "desc-stat")
 	       (:file "randist-multinomial")
 	       (:file "alias_method")
+	       (:file "cut-point")
 	       (:file "tests")))
 
 	       
