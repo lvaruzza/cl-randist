@@ -116,6 +116,53 @@
       
       (sqrt (/ res2 n)))))
 
+
+
+(defun report-uniform-count (c N)
+    (loop for x across c 
+	 when (= x 1) sum 1 into g1
+	 when (= x 0) sum 1 into g0
+	 when (and (> x 1) (<= x 2)) sum 1 into g2
+	 when (and (> x 2) (<= x 10)) sum 1 into g10
+	 when (> x 10) sum 1 into g>
+	 sum x into total
+	 finally (return (mapcar #'(lambda (x) (float (/ x N))) (list total g0 g1 g2 g10 g>)))))
+
+(defun uniform-reference (N)
+  (let* ((c (make-array N :initial-element 0)))
+
+    (loop for i from 1 to N
+	 do (incf (aref c (random (1- N)))))
+    (report-uniform-count c N)))
+
+
+(defun test-alias-method-uniform (N)
+  (let* ((p (make-array N :initial-element (/ 1.0d0 N)))
+	 (c (make-array N :initial-element 0))
+	 (f (make-discrete-random-var p)))
+
+    (loop for i from 1 to N
+	 do (incf (aref c (funcall f))))
+
+    (let ((uniform (uniform-reference N))
+	  (alias (report-uniform-count c N))
+	  (multinomial (report-uniform-count (random-multinomial N p) N)))
+      (list :uniform uniform :multinomial multinomial :alias alias))))
+
+
+(defun test-alias-method-zeros ()
+  (let* ((p #(0.0d0 0.75d0 0.24d0 0.001d0 0.001d0 0.001d0 0.001d0 0.001d0 0.005d0))
+	 (f (make-discrete-random-var p)))
+
+    (format t "1.P = ~f~%" (loop for x across p sum x))
+
+    (loop for i from 0 to 100000
+	 for x = (funcall f)
+	 when (= x 0) sum 1 into zeros
+	 when (= x 1) sum 1 into ones
+	 when (= x 4) sum 1 into four
+	 finally (return (list zeros ones four)))))
+    
 ;;; Copyright (c) 2006, Mario S. Mommer <m_mommer@yahoo.com>
 
 ;;; Permission is hereby granted, free of charge, to any person

@@ -62,9 +62,8 @@ gsl_ran_multinomial (const gsl_rng * r, const size_t K,
   (let ((norm 0d0)
 	(k  (1- (array-dimension p 0))))
 
-    (declare (type integer NN)
-	     (type (simple-array double-float (*)) p)
-	     (type (simple-array integer (*)) p))
+    (declare (type integer NN))
+;;	     (type (simple-array double-float (*)) p))
     
     (setf norm (loop for i fixnum from 0 to k
 		    sum (aref p i)))
