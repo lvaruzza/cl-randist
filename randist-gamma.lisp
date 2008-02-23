@@ -95,10 +95,10 @@
 ;;     }
 ;; }
 
-(declaim (ftype (function (fixnum) double-float) gamma-int)
-	 (inline gamma-int))
+(declaim (ftype (function (fixnum) double-float) random-gamma-int)
+	 (inline random-gamma-int))
 
-(defun gamma-int (a)
+(defun random-gamma-int (a)
   (declare (fixnum a))
   (if (< a 12)
     (do ((i 0 (1+ i))
@@ -209,10 +209,10 @@
   (multiple-value-bind (na frac) (truncate a)
     (declare (dynamic-extent na frac))
     (if (= frac 0)
-	(* b (gamma-int na))
+	(* b (random-gamma-int na))
 	(if (= na 0)
 	    (* b (gamma-frac a))
-	    (* b (+ (gamma-int na) (gamma-frac frac)))))))
+	    (* b (+ (random-gamma-int na) (gamma-frac frac)))))))
 	 
 
 

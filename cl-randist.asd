@@ -15,6 +15,7 @@
 	       (:file "randist-gamma")
 	       (:file "randist-beta")
 	       (:file "randist-binomial")
+	       (:file "randist-poisson")
 	       (:file "desc-stat")
 	       (:file "randist-multinomial")
 	       (:file "alias_method")
