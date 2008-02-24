@@ -16,8 +16,10 @@
 
    random-beta
    random-binomial
+   random-negetive-binomial
+
    random-poisson
    random-multinomial
 
-  
+   ;; Alias method for discrete distributions
    make-discrete-random-var))

@@ -11,15 +11,16 @@
   :serial t
   :components ((:file "packages")
 	       (:file "randist")
-	       (:file "randist-normal")
-	       (:file "randist-gamma")
-	       (:file "randist-beta")
-	       (:file "randist-binomial")
-	       (:file "randist-poisson")
-	       (:file "desc-stat")
-	       (:file "randist-multinomial")
+	       (:file "normal")
+	       (:file "gamma")
+	       (:file "beta")
+	       (:file "binomial")
+	       (:file "poisson")
+	       (:file "nbinomial")
+	       (:file "multinomial")
 	       (:file "alias_method")
 	       (:file "cut-point")
+	       (:file "desc-stat")
 	       (:file "tests")))
 
 	       
