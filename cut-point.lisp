@@ -1,5 +1,7 @@
 (in-package :randist)
 
+(declaim (optimize (debug 3)))
+
 (defun setup-cut-point-randist (p)
   (let* ((L 0)
 	 (J 0)
@@ -28,7 +30,7 @@
     (let ((M (length p)))
       #'(lambda ()
 	  (let* ((U (random-uniform))
-		 (X (aref I (1- (floor (* M U))))))
+		 (X (aref I (floor (* M U)))))
 	    (tagbody
 	     start
 	       (if (<= U (aref Q (1- X)))
@@ -37,7 +39,7 @@
 		     (incf X)
 		     (go start)))
 	     end)
-	    X)))))
+	    (1- X))))))
 	       
 	 
      

@@ -34,5 +34,5 @@
    make-discrete-random-var
 
    ;; Cut-point method for discrete distributions
-   ;; make-discrete-monotone-random-var
+   make-discrete-monotone-random-var
    ))
