@@ -19,6 +19,7 @@
    random-negetive-binomial
 
    random-poisson
+   random-exponential
    random-multinomial
 
    ;; Alias method for discrete distributions

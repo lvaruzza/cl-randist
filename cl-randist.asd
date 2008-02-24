@@ -19,6 +19,7 @@
 	       (:file "nbinomial")
 	       (:file "multinomial")
 	       (:file "alias_method")
+	       (:file "exponential")
 	       (:file "cut-point")
 	       (:file "desc-stat")
 	       (:file "tests")))
