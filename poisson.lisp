@@ -48,12 +48,14 @@
 ;; }
 
 
+(declaim (ftype (function (double-float) integer) random-poisson))
+
 (defun random-poisson (mu)
   (declare (type double-float mu))
   (let ((k 0))
     (declare (type integer k))
     (loop 
-       for m integer = (truncate (* mu (/ 7 8)))
+       for m integer = (truncate (* mu (/ 7d0 8d0)))
        for X double-float = (gamma-int m)
        while (> mu 10)
        do (if (>= X mu)
