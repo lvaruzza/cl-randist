@@ -71,7 +71,7 @@
 		     (if values (aref values k) k)))
 
 	    (multiple-value-bind (k r)
-		(floor (random N))
+		(floor (random-mt N))
 	      (if (> r (aref p_keep k))
 		  (result (aref alternatives k))
 		  (result k))))))))
@@ -83,7 +83,7 @@
 	(cnt (make-array n :initial-element 0.0d0)))
 
     (dotimes (i n)
-      (setf (aref p i) (random 1.0d0)))
+      (setf (aref p i) (random-uniform)))
     
     (let ((nc (loop for i from 0 below n summing (aref p i))))
 
@@ -102,7 +102,7 @@
 
     (loop
        for i from 0 to 10
-       for j = (random n)
+       for j = (random-mt n)
        do (progn
 	    (format t "~d:~6t~5e~6t~5e~%" j (aref p j) (aref cnt j))))
 
@@ -132,7 +132,7 @@
   (let* ((c (make-array N :initial-element 0)))
 
     (loop for i from 1 to N
-	 do (incf (aref c (random (1- N)))))
+	 do (incf (aref c (random-mt (1- N)))))
     (report-uniform-count c N)))
 
 
