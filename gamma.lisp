@@ -42,6 +42,7 @@
 
 (declaim (ftype (function (double-float) double-float) gamma-large)
 	 (inline gamma-large))
+
 (defun gamma-large (a)
   (declare (double-float a))
   
