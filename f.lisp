@@ -22,10 +22,6 @@
 ;;   return f;
 ;; }
 
-
-(declaim (ftype (function (double-float double-float) double-float) random-f)
-	 (inline random-f))
-
 (defun random-f (nu1 nu2)
    "Random value for:
 
@@ -33,7 +29,10 @@ p(x) dx = (nu1^(nu1/2) nu2^(nu2/2) Gamma((nu1 + nu2)/2) /
 Gamma(nu1/2) Gamma(nu2/2)) *
 x^(nu1/2 - 1) (nu2 + nu1 * x)^(-nu1/2 -nu2/2) dx"
    
-   (let ((y1 (random-gamma ((/ nu1 2d0) 2d0)))
-	 (y2 (random-gamma ((/ nu2 2d0) 2d0))))
+   (declare (type double-float nu1 nu2))
 
+   (let ((y1 (random-gamma (/ nu1 2d0) 2d0))
+	 (y2 (random-gamma (/ nu2 2d0) 2d0)))
+
+     (declare (type double-float y1 y2))
      (/ (* y1 nu2) (* y2 nu1))))
