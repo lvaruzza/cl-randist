@@ -16,6 +16,9 @@
 ;; }
 
 
+(declaim (ftype (function (integer double-float) double-float) random-negative-binomial)
+	 (inline random-negative-binomial))
+
 (defun random-negative-binomial (p n)
   (declare (type double-float p)
 	   (integer n))

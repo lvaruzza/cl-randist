@@ -56,7 +56,7 @@
     (declare (type integer k))
     (loop 
        for m integer = (truncate (* mu (/ 7d0 8d0)))
-       for X double-float = (gamma-int m)
+       for X double-float = (random-gamma-int m)
        while (> mu 10)
        do (if (>= X mu)
 	      (return-from 
@@ -72,7 +72,7 @@
       (declare (type double-float prod emu))
       (loop 
 	 do (progn
-	      (setf prod (* prod (random 1d0)))
+	      (setf prod (* prod (random-uniform)))
 	      (incf k))
 	 while (> prod emu)))
       

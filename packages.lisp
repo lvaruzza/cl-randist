@@ -2,7 +2,7 @@
 
 (defpackage :random-distributions
   (:use :cl)
-  (:nicknames :randist)
+  (:nicknames :randist :cl-randist)
   (:export
    random-uniform
    
@@ -31,4 +31,8 @@
    ;; random-t (untested)
 
    ;; Alias method for discrete distributions
-   make-discrete-random-var))
+   make-discrete-random-var
+
+   ;; Cut-point method for discrete distributions
+   ;; make-discrete-monotone-random-var
+   ))

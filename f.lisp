@@ -22,6 +22,10 @@
 ;;   return f;
 ;; }
 
+
+(declaim (ftype (function (double-float double-float) double-float) random-f)
+	 (inline random-f))
+
 (defun random-f (nu1 nu2)
    "Random value for:
 

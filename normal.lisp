@@ -225,7 +225,7 @@
 	     (setf y (+ y1 (* (- y0 y1) U1))))
 
 	   (let ((U1 (random-pos))
-		 (U2 (random 1d0)))
+		 (U2 (random-uniform)))
 	     (setf x (/ (- +R+ (log U1)) +R+))
 	     (setf y (* (exp (- (* +R+ (- x (/ +R+ 2))))) U2))))
 

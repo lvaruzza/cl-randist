@@ -149,7 +149,7 @@
   (let ((y 0d0))
     (tagbody
      start
-       (setf y (random 1d0))
+       (setf y (random-uniform))
        (when (= y 0d0)
 	 (go start)))
     y))
@@ -175,7 +175,7 @@
 	   (progn
 	     (setf x (- 1d0 (log v)))
 	     (setf q (exp (* (- a 1d0) (log x))))))
-       (when (>= (random 1d0) q)
+       (when (>= (random-uniform) q)
 	 (go start)))
     x))
 

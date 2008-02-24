@@ -27,7 +27,7 @@
   (multiple-value-bind (I Q) (setup-cut-point-randist p)
     (let ((M (length p)))
       #'(lambda ()
-	  (let* ((U (random 1d0))
+	  (let* ((U (random-uniform))
 		 (X (aref I (1- (floor (* M U))))))
 	    (tagbody
 	     start
