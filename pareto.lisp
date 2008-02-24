@@ -27,6 +27,6 @@
 p(x) dx = (a/b) / (x/b)^(a+1) dx     for x >= b"
 
   (declare (type double-float a b))
-  (let* ((x (random-uniform))
+  (let* ((x (random-pos))
 	 (z (expt x (/ -1d0 a))))
     (* b z)))
