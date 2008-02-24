@@ -23,6 +23,7 @@
 	       (:file "f")
 	       (:file "pareto")
 	       (:file "chisq")
+	       (:file "t")
 	       (:file "cut-point")
 	       (:file "desc-stat")
 	       (:file "tests")))

@@ -16,7 +16,7 @@
 
    random-beta
    random-binomial
-   random-negetive-binomial
+   random-negative-binomial
 
    random-poisson
    random-exponential
@@ -27,6 +27,8 @@
    ;;random-logistic (untested)
 
    random-chi-square
+
+   ;; random-t (untested)
 
    ;; Alias method for discrete distributions
    make-discrete-random-var))
