@@ -23,5 +23,10 @@
    random-multinomial
    random-f
    random-pareto
+
+   ;;random-logistic (untested)
+
+   random-chi-square
+
    ;; Alias method for discrete distributions
    make-discrete-random-var))

@@ -22,6 +22,7 @@
 	       (:file "exponential")
 	       (:file "f")
 	       (:file "pareto")
+	       (:file "chisq")
 	       (:file "cut-point")
 	       (:file "desc-stat")
 	       (:file "tests")))
