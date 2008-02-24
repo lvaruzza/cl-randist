@@ -60,9 +60,11 @@
     
     (tagbody
      start
+       (when (<= n 10)
+	 (go end))
        (setf a (+ 1 (floor n 2)))
        (setf b (+ 1 (- n a)))
-       
+
        (setf X (random-beta (coerce a 'double-float)
 			    (coerce b 'double-float)))
 
@@ -74,9 +76,8 @@
 	     (incf k a)
 	     (setf n (- b 1))
 	     (setf p (/ (- p X) (- 1d0 X)))))
-
-       (when (> n 10)
-	 (go start)))
+       (go start)
+     end)
 
     (loop
        for i integer from 0 to (- n 1)

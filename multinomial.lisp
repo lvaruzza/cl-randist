@@ -98,7 +98,7 @@ gsl_ran_multinomial (const gsl_rng * r, const size_t K,
 	      (loop for j from 0 to (1- d)
 		  do  (push (aref n j) (aref r j)))))
     (loop for j from 0 to (1- d)
-	 do (format t "~2d ~8.2f ~8.2f~t~8.2f ~8.2f~%"
+	 do (format t "~2d ~8f ~8f~t~8f ~8f~%"
 		    j
 		    (float (mean (aref r j)))
 		    (* nn (aref p j))
