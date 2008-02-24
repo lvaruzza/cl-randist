@@ -10,6 +10,7 @@
   :license "GPLv3"
   :serial t
   :components ((:file "packages")
+	       #-(or sbcl cmucl) (:file "jmt")
 	       (:file "randist")
 	       (:file "normal")
 	       (:file "gamma")
