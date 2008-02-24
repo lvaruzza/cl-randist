@@ -20,5 +20,9 @@
 	 (inline random-chi-square))
 
 (defun random-chi-square (nu)
+  "Generate random variable for chi square distribution:
+
+p(x) dx = (1/(2*Gamma(nu/2))) (x/2)^(nu/2 - 1) exp(-x/2) dx"
+  
   (declare (type double-float nu))
   (* 2d0 (random-gamma (/ nu 2d0))))
