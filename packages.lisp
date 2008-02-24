@@ -21,6 +21,7 @@
    random-poisson
    random-exponential
    random-multinomial
+   random-f
 
    ;; Alias method for discrete distributions
    make-discrete-random-var))

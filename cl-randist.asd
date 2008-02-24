@@ -20,6 +20,8 @@
 	       (:file "multinomial")
 	       (:file "alias_method")
 	       (:file "exponential")
+	       (:file "f")
+	       (:file "pareto")
 	       (:file "cut-point")
 	       (:file "desc-stat")
 	       (:file "tests")))
