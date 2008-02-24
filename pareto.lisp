@@ -27,6 +27,10 @@
 p(x) dx = (a/b) / (x/b)^(a+1) dx     for x >= b"
 
   (declare (type double-float a b))
+<<<<<<< HEAD:pareto.lisp
   (let* ((x (random-uniform))
+=======
+  (let* ((x (random-pos))
+>>>>>>> experimental:pareto.lisp
 	 (z (expt x (/ -1d0 a))))
     (* b z)))
