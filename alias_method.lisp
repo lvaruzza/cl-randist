@@ -147,7 +147,7 @@
     (let ((uniform (uniform-reference N))
 	  (alias (report-uniform-count c N))
 	  (multinomial (report-uniform-count (random-multinomial N p) N)))
-      (list :uniform uniform :multinomial multinomial :alias alias))))
+      (list (cons :uniform uniform)  (cons :multinomial multinomial) (cons :alias alias)))))
 
 
 (defun test-alias-method-zeros ()
