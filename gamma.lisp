@@ -100,6 +100,7 @@
 	 (inline random-gamma-int))
 
 (defun random-gamma-int (a)
+"Random variable with gamma distribution with integer parameter."
   (declare (fixnum a))
   (if (< a 12)
     (do ((i 0 (1+ i))

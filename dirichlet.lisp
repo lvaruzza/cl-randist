@@ -1,4 +1,4 @@
-
+(in-package :randist)
 
 ;; /* The Dirichlet probability distribution of order K-1 is 
 
