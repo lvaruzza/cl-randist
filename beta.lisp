@@ -17,6 +17,11 @@
 
 (declaim (ftype (function (double-float double-float) double-float) random-beta))
 (defun random-beta (a b)
+"The beta distribution has the form
+
+    p(x) dx = (Gamma(a + b)/(Gamma(a) Gamma(b))) x^(a-1) (1-x)^(b-1) dx
+
+The method used here is the one described in Knuth "
   (declare (double-float a b))
   (let ((x1 (random-gamma a 1d0))
 	(x2 (random-gamma b 1d0)))

@@ -8,6 +8,7 @@
     (random x state)))
 
 (defmacro random-uniform ()
+  "[syntax suggar] Random variable with uniform distribution in interval [0,1]"
   `(random-mt 1d0))
 
 (declaim (ftype (function () double-float) random-pos))

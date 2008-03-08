@@ -205,6 +205,23 @@
 	 (inline random-gamma1))
 
 (defun random-gamma1 (a b)
+"The Gamma distribution of order a>0 is defined by:
+
+  p(x) dx = {1 / \Gamma(a) b^a } x^{a-1} e^{-x/b} dx
+
+  for x>0.  If X and Y are independent gamma-distributed random
+  variables of order a1 and a2 with the same scale parameter b, then
+  X+Y has gamma distribution of order a1+a2.
+
+  The algorithms below are from Knuth, vol 2, 2nd ed, p. 129. 
+
+
+  Works only if a > 1, and is most efficient if a is large
+
+  This algorithm, reported in Knuth, is attributed to Ahrens.  A
+  faster one, we are told, can be found in: J. H. Ahrens and
+  U. Dieter, Computing 12 (1974) 223-246."
+
   (declare (double-float a b))
   (assert (> a 0d0))
   (multiple-value-bind (na frac) (truncate a)
@@ -267,6 +284,10 @@
 (declaim (ftype (function (double-float double-float) double-float)
 		random-gamma-mt))
 (defun random-gamma-mt (a b)
+"New version based on Marsaglia and Tsang, 'A Simple Method for
+generating gamma variables', ACM Transactions on Mathematical
+Software, Vol 26, No 3 (2000), p363-372."
+
   (declare (double-float a b))
   (if (< a 1d0)
       (* (random-gamma-mt (+ 1d0 a) b) (expt (random-uniform) (/ a)))
@@ -299,4 +320,5 @@
 (declaim (inline random-gamma))
 
 (defun random-gamma (a &optional (b 1d0))
+  "[syntax suggar] Generate a random variable with gamma distribution using the MT method (see random-gamma-mt)"
   (random-gamma-mt a b))

@@ -193,6 +193,29 @@
 (declaim (ftype (function (double-float double-float) double-float) random-normal-ziggurat))
 
 (defun random-normal-ziggurat (mean sigma)
+" This routine is based on the following article, with a couple of
+  modifications which simplify the implementation.
+
+      George Marsaglia, Wai Wan Tsang
+      The Ziggurat Method for Generating Random Variables
+      Journal of Statistical Software, vol. 5 (2000), no. 8
+      http://www.jstatsoft.org/v05/i08/
+
+  The modifications are:
+
+  1) use 128 steps instead of 256 to decrease the amount of static
+  data necessary.  
+
+  2) use an acceptance sampling from an exponential wedge
+  exp(-R*(x-R/2)) for the tail of the base strip to simplify the
+  implementation.  The area of exponential wedge is used in
+  calculating 'v' and the coefficients in ziggurat table, so the
+  coefficients differ slightly from those in the Marsaglia and Tsang
+  paper.
+
+  See also Leong et al, 'A Comment on the Implementation of the
+  Ziggurat Method', Journal of Statistical Software, vol 5 (2005), no 7."
+
   (let ((i 0) (j 0) (sign 0) (x 0d0) (y 0d0))
     (declare (double-float mean sigma))
     (declare (double-float x y))
@@ -241,5 +264,6 @@
 (declaim (inline random-normal))
 
 (defun random-normal (&optional (mean 0d0) (sigma 1d0))
+  "[sintax suggar] Generate random variable with normal distribution using ziggurat method"
   (random-normal-ziggurat mean sigma))
   

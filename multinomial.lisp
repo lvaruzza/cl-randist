@@ -59,6 +59,7 @@ gsl_ran_multinomial (const gsl_rng * r, const size_t K,
 |#
 
 (defun random-multinomial1 (NN p n)
+  "Return the genrated values in the n vector"
   (let ((norm 0d0)
 	(k  (1- (array-dimension p 0))))
 
@@ -81,6 +82,22 @@ gsl_ran_multinomial (const gsl_rng * r, const size_t K,
 		    
 
 (defun random-multinomial (NN p)
+"  The multinomial distribution has the form
+
+                                      N!           n_1  n_2      n_K
+   prob(n_1, n_2, ... n_K) = -------------------- p_1  p_2  ... p_K
+                             (n_1! n_2! ... n_K!) 
+
+   where n_1, n_2, ... n_K are nonnegative integers, sum_{k=1,K} n_k = N,
+   and p = (p_1, p_2, ..., p_K) is a probability distribution. 
+
+   Random variates are generated using the conditional binomial method.
+   This scales well with N and does not require a setup step.
+
+   Ref: 
+   C.S. David, The computer generation of multinomial random variates,
+   Comp. Stat. Data Anal. 16 (1993) 205-217"
+
   (let ((n (make-array (array-dimension p 0)
 		       :element-type 'integer
 		       :adjustable nil)))

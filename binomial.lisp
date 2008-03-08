@@ -47,8 +47,12 @@
 ;; }
 
 (declaim (ftype (function (double-float integer) integer) random-binomial))
-
 (defun random-binomial (p n)
+"The binomial distribution has the form,
+
+  prob(k) =  n!/(k!(n-k)!) *  p^k (1-p)^(n-k) for k = 0, 1, ..., n
+
+This is the algorithm from Knuth"
   (let ((a 0) (b 0) (k 0)
 	(X 0d0)
 	(p p) (n n))
