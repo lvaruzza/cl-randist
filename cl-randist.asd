@@ -14,6 +14,7 @@
 	       (:file "randist")
 	       (:file "normal")
 	       (:file "gamma")
+	       (:file "dirichlet")
 	       (:file "beta")
 	       (:file "binomial")
 	       (:file "poisson")
