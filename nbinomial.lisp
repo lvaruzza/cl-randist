@@ -1,6 +1,6 @@
 (in-package :randist)
 
-(declaim (optimize (speed 3) (safety 1)))
+(declaim (optimize (speed 3) (debug 3) (safety 1)))
 
 ;;    The negative binomial distribution has the form,
 ;;    prob(k) =  Gamma(n + k)/(Gamma(n) Gamma(k + 1))  p^n (1-p)^k 
@@ -23,5 +23,8 @@
   (declare (type double-float p)
 	   (integer n))
   (let ((X (random-gamma (coerce n 'double-float) 1d0)))
-    (random-poisson (* X (/ (- 1d0 p) p)))))
+    (format t "NBIN: x=~a p=~a~%" X p)
+    (let ((mu (* X (/ (- 1d0 p) p))))
+      (format t "NBIN: mu=~a~%" mu)
+      (random-poisson mu))))
 

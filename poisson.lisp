@@ -1,6 +1,6 @@
 (in-package :randist)
 
-(declaim (optimize (speed 3) (debug 0) (safety 1)))
+(declaim (optimize (speed 3) (debug 3) (safety 1)))
 
 ;; /* The poisson distribution has the form
 

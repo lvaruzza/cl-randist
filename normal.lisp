@@ -241,5 +241,6 @@
 (declaim (inline random-normal))
 
 (defun random-normal (&optional (mean 0d0) (sigma 1d0))
-  (random-normal-ziggurat mean sigma))
+  (random-normal-ziggurat (coerce mean 'double-float)
+			  (coerce sigma 'double-float)))
   
