@@ -5,14 +5,16 @@
   (:nicknames :randist :cl-randist)
   (:export
    random-uniform
+
+   random-normal
+   random-normal-ziggurat
    
    random-gamma
    random-gamma1
    random-gamma-mt
    random-gamma-int
 
-   random-normal
-   random-normal-ziggurat
+   random-dirichlet
 
    random-beta
    random-binomial

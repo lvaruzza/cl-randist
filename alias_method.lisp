@@ -15,6 +15,7 @@
 ;; It needs only one call to RANDOM for every value produced.
 ;;
 ;; For the licence, see at the end of the file.
+
 (defun create-alias-method-vectors (probabilities)
   (let* ((N (length probabilities))
 	 (threshold (/ 1.0d0 N))
@@ -60,6 +61,12 @@
     (values p_keep alternatives)))
 
 (defun make-discrete-random-var (probabilities &optional values)
+" The function MAKE-DISCRETE-RANDOM-VAR takes an array of
+probabilities and an (optional) array of values. Produces a
+function which returns each of the values with the specified
+probability (or the corresponding integer no values have been
+given)."
+
   (when (and values (/= (length values) (length probabilities)))
     (error "different number of values and probabilities."))
 

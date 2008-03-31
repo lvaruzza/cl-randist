@@ -1,0 +1,393 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html> 
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>RANDOM-DISTRIBUTIONS - a cool library</title>
+  <style type="text/css">
+  pre { padding:5px; background-color:#e0e0e0 }
+  h3, h4 { text-decoration: underline; }
+  a { text-decoration: none; padding: 1px 2px 1px 2px; }
+  a:visited { text-decoration: none; padding: 1px 2px 1px 2px; }
+  a:hover { text-decoration: none; padding: 1px 1px 1px 1px; border: 1px solid #000000; } 
+  a:focus { text-decoration: none; padding: 1px 2px 1px 2px; border: none; }
+  a.none { text-decoration: none; padding: 0; }
+  a.none:visited { text-decoration: none; padding: 0; } 
+  a.none:hover { text-decoration: none; border: none; padding: 0; } 
+  a.none:focus { text-decoration: none; border: none; padding: 0; } 
+  a.noborder { text-decoration: none; padding: 0; } 
+  a.noborder:visited { text-decoration: none; padding: 0; } 
+  a.noborder:hover { text-decoration: none; border: none; padding: 0; } 
+  a.noborder:focus { text-decoration: none; border: none; padding: 0; }  
+  pre.none { padding:5px; background-color:#ffffff }
+  </style>
+</head>
+
+<body bgcolor=white>
+
+<h2> RANDOM-DISTRIBUTIONS - A library for random numbers generation</h2>
+
+<blockquote>
+<br>&nbsp;<br><h3><a name=abstract class=none>Abstract</a></h3>
+
+<p>This a manual translation from C to common lisp of some random number generation functions of <a href="http://www.gnu.org/software/gsl/">GSL</a> library.</p>
+
+<p> This package also include the alias method implementation of <a href="http://prxq.wordpress.com/2006/04/23/more-on-the-alias-method/">Mario S. Mommer</a> and my implementation of <a href="http://links.jstor.org/sici?sici=0003-1305(198408)38%3A3%3C219%3ASFADDW%3E2.0.CO%3B2-5">cut point method</a> for discrete random variable generation.</p>
+
+<p>The code comes with a <a href="http://www.opensource.org/licenses/bsd-license.php">BSD-style license</a> 
+so you can basically do with it whatever you want.</p>
+
+<p>
+<font color=red>Download shortcut:</font> <a
+href="http://cl-randist.googlecode.com/files/cl-randist.tar.gz">http://cl-randist.googlecode.com/files/cl-randist.tar.gz</a>.
+
+<p> Latest development version can by download with git: git clone http://lambdatau.com/git/cl-randist</p>
+
+</blockquote>
+
+<br>&nbsp;<br><h3><a class=none name="contents">Contents</a></h3>
+<ol>
+  <li><a href="#download">Download</a>
+  <li><a href="#dictionary">The RANDOM-DISTRIBUTIONS dictionary</a>
+    <ol>
+      <li><a href="#make-discrete-monotone-random-var"><code>make-discrete-monotone-random-var</code></a>
+      <li><a href="#make-discrete-random-var"><code>make-discrete-random-var</code></a>
+      <li><a href="#random-beta"><code>random-beta</code></a>
+      <li><a href="#random-binomial"><code>random-binomial</code></a>
+      <li><a href="#random-chi-square"><code>random-chi-square</code></a>
+      <li><a href="#random-exponential"><code>random-exponential</code></a>
+      <li><a href="#random-f"><code>random-f</code></a>
+      <li><a href="#random-gamma"><code>random-gamma</code></a>
+      <li><a href="#random-gamma-int"><code>random-gamma-int</code></a>
+      <li><a href="#random-gamma-mt"><code>random-gamma-mt</code></a>
+      <li><a href="#random-gamma1"><code>random-gamma1</code></a>
+      <li><a href="#random-multinomial"><code>random-multinomial</code></a>
+      <li><a href="#random-negative-binomial"><code>random-negative-binomial</code></a>
+      <li><a href="#random-normal"><code>random-normal</code></a>
+      <li><a href="#random-normal-ziggurat"><code>random-normal-ziggurat</code></a>
+      <li><a href="#random-pareto"><code>random-pareto</code></a>
+      <li><a href="#random-poisson"><code>random-poisson</code></a>
+      <li><a href="#random-uniform"><code>random-uniform</code></a>
+    </ol>
+  <li><a href="#ack">Acknowledgements</a>
+</ol>
+
+<br>&nbsp;<br><h3><a class=none name="download">Download</a></h3>
+
+RANDOM-DISTRIBUTIONS together with this documentation can be downloaded from <a
+href="http://cl-randist.googlecode.com/files/cl-randist.tar.gz">http://cl-randist.googlecode.com/files/cl-randist.tar.gz</a>. The
+current version is 0.3.0.
+
+<br>&nbsp;<br><h3><a class=none name="dictionary">The RANDOM-DISTRIBUTIONS dictionary</a></h3>
+
+
+
+<!-- Entry for MAKE-DISCRETE-MONOTONE-RANDOM-VAR -->
+
+<p><br>[Function]<br><a class=none name='make-discrete-monotone-random-var'><b>make-discrete-monotone-random-var</b> <i>p</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+ The function MAKE-DISCRETE-MONOTONE-RANDOM-VAR takes an array of
+probabilities. Produces a function which returns each of the
+corresponding integer with the specified probability.
+
+
+</blockquote>
+
+<!-- End of entry for MAKE-DISCRETE-MONOTONE-RANDOM-VAR -->
+
+
+<!-- Entry for MAKE-DISCRETE-RANDOM-VAR -->
+
+<p><br>[Function]<br><a class=none name='make-discrete-random-var'><b>make-discrete-random-var</b> <i>probabilities <tt>&amp;optional</tt> values</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+ The function MAKE-DISCRETE-RANDOM-VAR takes an array of
+probabilities and an (optional) array of values. Produces a
+function which returns each of the values with the specified
+probability (or the corresponding integer no values have been
+given).
+
+</blockquote>
+
+<!-- End of entry for MAKE-DISCRETE-RANDOM-VAR -->
+
+
+<!-- Entry for RANDOM-BETA -->
+
+<p><br>[Function]<br><a class=none name='random-beta'><b>random-beta</b> <i>a b</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+The beta distribution has the form
+
+    p(x) dx = (Gamma(a + b)/(Gamma(a) Gamma(b))) x^(a-1) (1-x)^(b-1) dx
+
+The method used here is the one described in Knuth 
+
+</blockquote>
+
+<!-- End of entry for RANDOM-BETA -->
+
+
+<!-- Entry for RANDOM-BINOMIAL -->
+
+<p><br>[Function]<br><a class=none name='random-binomial'><b>random-binomial</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+The binomial distribution has the form,
+
+  prob(k) =  n!/(k!(n-k)!) *  p^k (1-p)^(n-k) for k = 0, 1, ..., n
+
+This is the algorithm from Knuth
+
+</blockquote>
+
+<!-- End of entry for RANDOM-BINOMIAL -->
+
+
+<!-- Entry for RANDOM-CHI-SQUARE -->
+
+<p><br>[Function]<br><a class=none name='random-chi-square'><b>random-chi-square</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Generate random variable for chi square distribution:
+
+p(x) dx = (1/(2*Gamma(nu/2))) (x/2)^(nu/2 - 1) exp(-x/2) dx
+
+</blockquote>
+
+<!-- End of entry for RANDOM-CHI-SQUARE -->
+
+
+<!-- Entry for RANDOM-EXPONENTIAL -->
+
+<p><br>[Function]<br><a class=none name='random-exponential'><b>random-exponential</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Random values for:
+p(x) dx = exp(-x/mu) dx/mu
+
+</blockquote>
+
+<!-- End of entry for RANDOM-EXPONENTIAL -->
+
+
+<!-- Entry for RANDOM-F -->
+
+<p><br>[Function]<br><a class=none name='random-f'><b>random-f</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Random value for:
+
+p(x) dx = (nu1^(nu1/2) nu2^(nu2/2) Gamma((nu1 + nu2)/2) /
+Gamma(nu1/2) Gamma(nu2/2)) *
+x^(nu1/2 - 1) (nu2 + nu1 * x)^(-nu1/2 -nu2/2) dx
+
+</blockquote>
+
+<!-- End of entry for RANDOM-F -->
+
+
+<!-- Entry for RANDOM-GAMMA -->
+
+<p><br>[Function]<br><a class=none name='random-gamma'><b>random-gamma</b> <i>a <tt>&amp;optional</tt> b</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+[syntax suggar] Generate a random variable with gamma distribution using the MT method (see random-gamma-mt)
+
+</blockquote>
+
+<!-- End of entry for RANDOM-GAMMA -->
+
+
+<!-- Entry for RANDOM-GAMMA-INT -->
+
+<p><br>[Function]<br><a class=none name='random-gamma-int'><b>random-gamma-int</b> <i>a</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+  Random variable with gamma distribution with integer parameter.
+
+</blockquote>
+
+<!-- End of entry for RANDOM-GAMMA-INT -->
+
+
+<!-- Entry for RANDOM-GAMMA-MT -->
+
+<p><br>[Function]<br><a class=none name='random-gamma-mt'><b>random-gamma-mt</b> <i>a b</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+New version based on Marsaglia and Tsang, &#039;A Simple Method for
+generating gamma variables&#039;, ACM Transactions on Mathematical
+Software, Vol 26, No 3 (2000), p363-372.
+
+</blockquote>
+
+<!-- End of entry for RANDOM-GAMMA-MT -->
+
+
+<!-- Entry for RANDOM-GAMMA1 -->
+
+<p><br>[Function]<br><a class=none name='random-gamma1'><b>random-gamma1</b> <i>a b</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+The Gamma distribution of order a&gt;0 is defined by:
+
+  p(x) dx = {1 / Gamma(a) b^a } x^{a-1} e^{-x/b} dx
+
+  for x&gt;0.  If X and Y are independent gamma-distributed random
+  variables of order a1 and a2 with the same scale parameter b, then
+  X+Y has gamma distribution of order a1+a2.
+
+  The algorithms below are from Knuth, vol 2, 2nd ed, p. 129. 
+
+
+  Works only if a &gt; 1, and is most efficient if a is large
+
+  This algorithm, reported in Knuth, is attributed to Ahrens.  A
+  faster one, we are told, can be found in: J. H. Ahrens and
+  U. Dieter, Computing 12 (1974) 223-246.
+
+</blockquote>
+
+<!-- End of entry for RANDOM-GAMMA1 -->
+
+
+<!-- Entry for RANDOM-MULTINOMIAL -->
+
+<p><br>[Function]<br><a class=none name='random-multinomial'><b>random-multinomial</b> <i>nn p</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+  The multinomial distribution has the form
+
+                                      N!           n_1  n_2      n_K
+   prob(n_1, n_2, ... n_K) = -------------------- p_1  p_2  ... p_K
+                             (n_1! n_2! ... n_K!) 
+
+   where n_1, n_2, ... n_K are nonnegative integers, sum_{k=1,K} n_k = N,
+   and p = (p_1, p_2, ..., p_K) is a probability distribution. 
+
+   Random variates are generated using the conditional binomial method.
+   This scales well with N and does not require a setup step.
+
+   Ref: 
+   C.S. David, The computer generation of multinomial random variates,
+   Comp. Stat. Data Anal. 16 (1993) 205-217
+
+</blockquote>
+
+<!-- End of entry for RANDOM-MULTINOMIAL -->
+
+
+<!-- Entry for RANDOM-NEGATIVE-BINOMIAL -->
+
+<p><br>[Function]<br><a class=none name='random-negative-binomial'><b>random-negative-binomial</b> <i>p n</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+   The negative binomial distribution has the form,
+   prob(k) =  Gamma(n + k)/(Gamma(n) Gamma(k + 1))  p^n (1-p)^k 
+   for k = 0, 1, ... . Note that n does not have to be an integer.
+   This is the Leger&#039;s algorithm (given in the answers in Knuth)
+
+</blockquote>
+
+<!-- End of entry for RANDOM-NEGATIVE-BINOMIAL -->
+
+
+<!-- Entry for RANDOM-NORMAL -->
+
+<p><br>[Function]<br><a class=none name='random-normal'><b>random-normal</b> <i><tt>&amp;optional</tt> mean sigma</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+[sintax suggar] Generate random variable with normal distribution using ziggurat method
+
+</blockquote>
+
+<!-- End of entry for RANDOM-NORMAL -->
+
+
+<!-- Entry for RANDOM-NORMAL-ZIGGURAT -->
+
+<p><br>[Function]<br><a class=none name='random-normal-ziggurat'><b>random-normal-ziggurat</b> <i>mean sigma</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+ This routine is based on the following article, with a couple of
+  modifications which simplify the implementation.
+
+      George Marsaglia, Wai Wan Tsang
+      The Ziggurat Method for Generating Random Variables
+      Journal of Statistical Software, vol. 5 (2000), no. 8
+      http://www.jstatsoft.org/v05/i08/
+
+  The modifications are:
+
+  1) use 128 steps instead of 256 to decrease the amount of static
+  data necessary.  
+
+  2) use an acceptance sampling from an exponential wedge
+  exp(-R*(x-R/2)) for the tail of the base strip to simplify the
+  implementation.  The area of exponential wedge is used in
+  calculating &#039;v&#039; and the coefficients in ziggurat table, so the
+  coefficients differ slightly from those in the Marsaglia and Tsang
+  paper.
+
+  See also Leong et al, &#039;A Comment on the Implementation of the
+  Ziggurat Method&#039;, Journal of Statistical Software, vol 5 (2005), no 7.
+
+</blockquote>
+
+<!-- End of entry for RANDOM-NORMAL-ZIGGURAT -->
+
+
+<!-- Entry for RANDOM-PARETO -->
+
+<p><br>[Function]<br><a class=none name='random-pareto'><b>random-pareto</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Random value for parato distribution:
+p(x) dx = (a/b) / (x/b)^(a+1) dx     for x &gt;= b
+
+</blockquote>
+
+<!-- End of entry for RANDOM-PARETO -->
+
+
+<!-- Entry for RANDOM-POISSON -->
+
+<p><br>[Function]<br><a class=none name='random-poisson'><b>random-poisson</b> <i>mu</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+The poisson distribution has the form
+
+  p(n) = (mu^n / n!) exp(-mu) 
+
+  for n = 0, 1, 2, ... . The method used here is the one from Knuth.
+
+</blockquote>
+
+<!-- End of entry for RANDOM-POISSON -->
+
+
+<!-- Entry for RANDOM-UNIFORM -->
+
+<p><br>[Macro]<br><a class=none name='random-uniform'><b>random-uniform</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+[syntax suggar] Random variable with uniform distribution in interval [0,1]
+
+</blockquote>
+
+<!-- End of entry for RANDOM-UNIFORM -->
+
+
+<br>&nbsp;<br><h3><a class=none name="ack">Acknowledgements</a></h3>
+
+<p>
+This documentation was prepared with <a href="http://weitz.de/documentation-template/">DOCUMENTATION-TEMPLATE</a>.
+</p>
+<p>
+$Header: /usr/local/cvsrep/documentation-template/output.lisp,v 1.13 2007/04/17 19:29:52 edi Exp $
+<p><a href="http://weitz.de/index.html">BACK TO MY HOMEPAGE</a>
+
+</body>
+</html>

@@ -51,6 +51,12 @@
 (declaim (ftype (function (double-float) integer) random-poisson))
 
 (defun random-poisson (mu)
+"The poisson distribution has the form
+
+  p(n) = (mu^n / n!) exp(-mu) 
+
+  for n = 0, 1, 2, ... . The method used here is the one from Knuth."
+
   (declare (type double-float mu))
   (let ((k 0))
     (declare (type integer k))
