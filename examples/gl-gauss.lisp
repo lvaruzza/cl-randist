@@ -1,3 +1,8 @@
+(eval-when (:compile-toplevel)
+  (require 'cl-randist)
+  (require 'cl-opengl)
+  (require 'lispbuilder-sdl))
+
 (defun gl-gauss ()
   (let  ((points (loop for i from 0 to 10000
 		    collect (cons
