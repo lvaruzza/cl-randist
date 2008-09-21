@@ -26,6 +26,9 @@
    random-f
    random-pareto
 
+   random-GIG
+   random-generalized-inverse-gaussian
+
    ;;random-logistic (untested)
 
    random-chi-square

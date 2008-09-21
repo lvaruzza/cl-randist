@@ -28,6 +28,7 @@
 	       (:file "t")
 	       (:file "cut-point")
 	       (:file "desc-stat")
+	       (:file "GIG")
 	       (:file "tests")))
 
 	       
