@@ -28,6 +28,9 @@
 
    random-GIG
    random-generalized-inverse-gaussian
+   make-random-variable-gig
+   make-random-variable-gig-poisson
+   random-gig-IID
 
    ;;random-logistic (untested)
 

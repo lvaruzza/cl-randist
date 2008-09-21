@@ -98,27 +98,13 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;	       
 
-#+TODO(defun random-gig1 (chi psi)
-  "Optimized version of random-gig for lambda=1"
-  -42.0)
 
-(defun random-gig (lambda chi psi)
-  "Random Generalized Inverse Poisson
-
-The algorithm is based on that given by Dagpunar (1989)"
-  (when (< chi 0) (error "chi can not be negative"))
-  (when (< psi 0) (error "psi can not be negative"))
-
-  #+null (when (= lambda 1)
-	   (returnrn-from random-gig (random-gig1 chi psi)))
-  
-  (let* ((lambda (coerce lambda 'double-float))
-	 (chi (coerce chi 'double-float))
-	 (psi (coerce psi 'double-float))
-	 (alpha (sqrt (/ psi chi)))
-	 (beta (sqrt (* psi chi)))
-	 (l1 (- lambda 1d0))
-	 (m (/ (+ l1 (sqrt (+ (* l1 l1) (* beta beta)))) beta)))
+(defun gig-setup (lambda chi psi)
+  (declare (type double-float lambda chi psi))
+  (let* ((alpha (sqrt (/ psi chi)))
+	(beta (sqrt (* psi chi)))
+	(l1 (- lambda 1d0))
+	(m (/ (+ l1 (sqrt (+ (* l1 l1) (* beta beta)))) beta)))
 
     #+TODO(print (list 'alpha alpha 'beta beta 'l1 l1 'm m))
 
@@ -140,36 +126,75 @@ The algorithm is based on that given by Dagpunar (1989)"
 	     (b (* (- yM m)
 		   (expt (/ yM m) (* 0.5d0 l1))
 		   (exp (* -0.25d0 beta (+ yM (/ yM) (- m) (- (/ m)))))))
-	     (c (+ (* -0.25 beta (+ m (/ m))) (* 0.5d0 l1 (log m))))
-	     (R1) (R2) (Y))
+	     (c (+ (* -0.25 beta (+ m (/ m))) (* 0.5d0 l1 (log m)))))
+	(values l1 alpha beta m a b c)))))
 
-	#+null(print (list 'a (* (- yP m) (/ yP m)) (* 0.5d0 l1)))
-	#+null(print (list 'a (exp (* -0.25d0 beta (+ yP (/ yP) (- m) (- (/ m)))))))
-	#+null(print (list 'upper upper 'yM yM 'yP yP))
-	#+null(print (list (* (- yM m) (/ yM m)) (* 0.5d0 l1)))
-	#+null(print (list 'yM yM 'yP yP 'a a 'b b 'c c))
+	     
+#+TODO(defun random-gig1 (chi psi)
+  "Optimized version of random-gig for lambda=1"
+  -42.0)
 
-	(tagbody
-	 start
-	   (setf R1 (random-uniform)
-		 R2 (random-uniform)
-		 Y (+ m (* a (/ R2 R1)) (* b (/ (- 1d0 R2) R1))))
-	   #+null(print (list 'R R1 R2))
-	   #+null(print (list 'y y m a b))
-	   (when (and (> Y 0)
-		      (>= (- (log R1)) (+ (* -0.5d0 l1 (log Y)) 
-					  (* 0.25d0 beta (+ Y (/ Y))) c)))
-	     #+null(print y)
-	     (go end))
-	   (go start)
-	 end)
-	(/ Y alpha)))))
+(declaim (inline %random-gig))  
+(defun %random-gig (l1 alpha beta m a b c)
+  (let ((Y))
+    (tagbody
+     start
+       (let* ((R1 (random-uniform))
+	      (R2 (random-uniform)))
+	 (setf Y (+ m (* a (/ R2 R1)) (* b (/ (- 1d0 R2) R1))))
+	 #+null(print (list 'R R1 R2))
+	 #+null(print (list 'y y m a b))
+	 (when (and (> Y 0)
+		    (>= (- (log R1)) (+ (* -0.5d0 l1 (log Y)) 
+					(* 0.25d0 beta (+ Y (/ Y))) c)))
+	   #+null(print y)
+	   (go end)))
+       (go start)
+     end)
+    (/ Y alpha)))
+
+(defun random-gig (lambda chi psi)
+  "Random Generalized Inverse Poisson
+
+The algorithm is based on that given by Dagpunar (1989)"
+  (when (< chi 0) (error "chi can not be negative"))
+  (when (< psi 0) (error "psi can not be negative"))
+
+  #+null (when (= lambda 1)
+	   (returnrn-from random-gig (random-gig1 chi psi)))
+  
+  (let* ((lambda (coerce lambda 'double-float))
+	 (chi (coerce chi 'double-float))
+	 (psi (coerce psi 'double-float)))
+
+    (multiple-value-bind (l1 alpha beta m a b c) (gig-setup lambda chi psi)
+      (%random-gig l1 alpha beta m a b c))))
 	
-	     
-
-	     
 	
 (declaim (inline random-generalized-inverse-poisson))
 
 (defun random-generalized-inverse-poisson (lambda chi psi)
   (random-GIG lambda chi psi))
+
+  
+(defun make-random-variable-gig (lambda chi psi)
+  (when (< chi 0) (error "chi can not be negative"))
+  (when (< psi 0) (error "psi can not be negative"))
+
+  (let* ((lambda (coerce lambda 'double-float))
+	 (chi (coerce chi 'double-float))
+	 (psi (coerce psi 'double-float)))
+
+    (multiple-value-bind (l1 alpha beta m a b c) (gig-setup lambda chi psi)
+      (lambda ()
+	(%random-gig l1 alpha beta m a b c)))))
+
+(defun make-random-variable-gig-poisson (lambda chi psi)
+  (let ((gig (make-random-variable-gig lambda chi psi)))
+    (lambda ()
+      (random-poisson (funcall gig)))))
+
+(defun random-gig-iid (n lambda chi psi)
+  "Random Generalized Inverse Poisson (vector version)"
+  (let ((gig (make-random-variable-gig lambda chi psi)))
+    (random-vector-iid n gig)))
