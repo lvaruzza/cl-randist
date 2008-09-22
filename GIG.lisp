@@ -1,6 +1,8 @@
 (in-package :randist)
 
-(declaim (optimize (debug 3) (safety 3)))
+(declaim (optimize (speed 3) (debug 0) (safety 3)))
+
+(declaim (inline transfer-sign))
 
 (defun transfer-sign (a b)
   (if (>= b 0)
@@ -32,6 +34,9 @@
       this function subprogram is a slightly  modified  translation  of
   the algol 60 procedure  zero  given in  richard brent, algorithms for
   minimization without derivatives, prentice - hall, inc. (1973)."
+
+  (declare (type double-float ax bx)
+	   (ftype (function (double-float) double-float) f))
 
   (let* ((a ax)
 	 (b bx)
@@ -118,7 +123,7 @@
  
       (let* ((upper (do ((x m (* 2 x)))
 			((> (g x) 0d0) x)))		      
-	     (yM (zeroin 0 m #'g))
+	     (yM (zeroin 0d0 m #'g))
 	     (yP (zeroin m upper #'g))
 	     (a (* (- yP m)
 		   (expt (/ yP m) (* 0.5d0 l1))
@@ -198,3 +203,25 @@ The algorithm is based on that given by Dagpunar (1989)"
   "Random Generalized Inverse Poisson (vector version)"
   (let ((gig (make-random-variable-gig lambda chi psi)))
     (random-vector-iid n gig)))
+
+;; Tests
+
+(defun test-gig-range ()
+  (let ((r (make-random-variable-gig-poisson -0.7277 0.0417 0.0016)))
+    (time (loop 
+	     for i from 0 to 100000
+	     for x = (funcall r)  
+	     counting (> x 0) into nz
+	     minimizing x into min
+	     maximizing x into max
+	     finally (return (list min max nz))))))
+
+(defun test-gig-speed ()
+  (time (loop 
+	   for i from 0 to 100000
+	   for x = (random-poisson (random-gig  -0.7277 0.0417 0.0016))
+	   counting (> x 0) into nz
+	   minimizing x into min
+	   maximizing x into max
+	   finally (return (list min max nz)))))
+  
