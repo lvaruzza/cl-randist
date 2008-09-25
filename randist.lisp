@@ -26,4 +26,5 @@
   "Return a vector with n IID instances of variable"
   (let ((output (make-array n :element-type 'double-float :adjustable nil :fill-pointer nil)))
     (loop for i from 0 to (1- n)
-       do (setf (aref output i) (funcall variable)))))
+       do (setf (aref output i) (funcall variable)))
+    output))
