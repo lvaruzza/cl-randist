@@ -6,6 +6,8 @@
   (:export
    random-uniform
 
+   random-bernoulli
+
    random-normal
    random-normal-ziggurat
    

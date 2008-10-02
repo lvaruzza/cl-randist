@@ -28,3 +28,8 @@
     (loop for i from 0 to (1- n)
        do (setf (aref output i) (funcall variable)))
     output))
+
+(defun random-bernoulli (p)
+  (if (> (random-uniform) p)
+      1
+      0))
