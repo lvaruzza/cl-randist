@@ -10,7 +10,9 @@
 
    random-normal
    random-normal-ziggurat
-   
+   random-normal-bivariate
+
+   bivariate-gaussian
    random-gamma
    random-gamma1
    random-gamma-mt
@@ -25,6 +27,7 @@
    random-poisson
    random-exponential
    random-multinomial
+   random-multinomial%
    random-f
    random-pareto
 

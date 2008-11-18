@@ -268,3 +268,70 @@
   (random-normal-ziggurat (coerce mean 'double-float)
 			  (coerce sigma 'double-float)))
   
+
+;;
+;; Contributed by Joel J. Adamson <adamsonj@email.unc.edu>
+;;
+
+(defun random-normal-bivariate (sigma-x sigma-y &key (rho 0.0) (error-limit 500) (tries 0))
+ "Return a pair of numbers with specific correlation coefficent rho
+and with specified variances sigma-x and sigma-y; a direct port of
+gsl_ran_bivariate_gaussian from the GNU Scientific Library:
+
+void
+gsl_ran_bivariate_gaussian (const gsl_rng * r,
+                           double sigma_x, double sigma_y, double rho,
+                           double *x, double *y)
+{
+ double u, v, r2, scale;
+
+ do
+   {
+     /* choose x,y in uniform square (-1,-1) to (+1,+1) */
+
+     u = -1 + 2 * gsl_rng_uniform (r);
+     v = -1 + 2 * gsl_rng_uniform (r);
+
+     /* see if it is in the unit circle */
+     r2 = u * u + v * v;
+   }
+ while (r2 > 1.0 || r2 == 0);
+
+ scale = sqrt (-2.0 * log (r2) / r2);
+
+ *x = sigma_x * u * scale;
+ *y = sigma_y * (rho * u + sqrt(1 - rho*rho) * v) * scale;
+}
+
+I need a good test for this one.
+"
+        (let* ((u (- 1.0 (+ (* 2.0 (random 1.0d0)))))
+               ;; give me a pair of random numbers from the built-in
+               ;; uniform random number generator
+               ;;
+               ;; dividing by 100.0 ensures that I get a number
+               ;; between 0 and 1
+               (v (- 1.0 (+ (* 2.0 (random 1.0d0)))))
+               ;; the next two terms test to see if the pair is
+               ;; within the unit circle
+               (radius (+ (* u u) (* v v)))
+               (scale (sqrt (/ (* -2.0 (log radius)) radius))))
+          ;; if this pair is not within the unit circle, try again
+          (cond ((or (not (<= radius 1.0))
+                     (= radius 0.0))
+                 (if (< tries error-limit)
+                     ;; increment the number of tries
+                     ;;
+                     ;; tries should not be specified by the user
+                     (random-normal-bivariate sigma-x sigma-y :rho rho
+                                         :tries (incf tries))
+                     ;; too many tries --- sorry!
+                     (error "Unsuccessful bivariate-gaussian after ~S tries" tries)))
+                ;; otherwise return the two values, calculated as in
+                ;; the C-code above
+                (t (list (* sigma-x u scale)
+                         (* sigma-y (+ (* rho u) (* v (sqrt (- 1.0 (*
+                                                                    rho
+                                                                    rho)))))
+                                                                    scale))))))
+
