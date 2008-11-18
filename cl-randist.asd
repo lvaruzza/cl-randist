@@ -5,7 +5,7 @@
 
 (defsystem :cl-randist
   :description "Random Distribution Generation"
-  :version "0.3.1"
+  :version "0.3.2"
   :author "Leonardo Varuzza <varuzza@gmail.com>"
   :license "GPLv3"
   :serial t
