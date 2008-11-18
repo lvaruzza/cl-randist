@@ -1,6 +1,6 @@
 (in-package :randist)
 
-(declaim (optimize (speed 0) (safety 3) (debug 3)))
+(declaim (optimize (speed 3) (safety 1) (debug 0)))
 
 
 #| The multinomial distribution has the form
@@ -81,7 +81,10 @@ gsl_ran_multinomial (const gsl_rng * r, const size_t K,
 	 sum (aref n i) into sum-n)))
 		    
 
-(defun random-multinomial (NN p)
+(defun convert-to-double-float-vector (x)
+  (map 'vector (lambda (x) (coerce x 'double-float)) x))
+
+(defun random-multinomial% (NN p)
 "  The multinomial distribution has the form
 
                                       N!           n_1  n_2      n_K
@@ -104,6 +107,9 @@ gsl_ran_multinomial (const gsl_rng * r, const size_t K,
 
     (random-multinomial1 NN p n)
     n))
+
+(defun random-multinomial (NN p)
+  (random-multinomial% NN (convert-to-double-float-vector p)))
 
 (defun test-multinomial1 (nn p &optional (k 10000))
   (let* ((d (array-dimension p 0))
