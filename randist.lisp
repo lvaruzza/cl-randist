@@ -1,7 +1,7 @@
 (in-package :randist)
 
 ;; On CMUCL or SBCL the random already uses mersene twister
-#+(or sbcl cmucl)
+#+sbcl
 (progn
   (declaim (inline random-mt))
   (defun random-mt (x &optional (state *random-state*))
@@ -33,3 +33,4 @@
   (if (> (random-uniform) p)
       1
       0))
+
