@@ -231,7 +231,7 @@ MT-GENRAND function for clarity."
       (setq y (logxor y (mt-tempering-shift-l y)))
       y)))
 
-(defun mt-random (n &optional state)
+(defun random-mt (n &optional state)
   (assert (plusp n))
   (when state
     (assert (mt-random-state-p state))

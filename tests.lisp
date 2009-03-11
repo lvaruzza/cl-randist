@@ -40,6 +40,7 @@
   (test-dist #'(lambda (x)
 		 (random-binomial 0.3d0 10)) n))
 
+#+sbcl
 (defun profile-gamma (&optional (n (* 100 1000)))
   (sb-profile:reset)
   (sb-profile:profile random-gamma gamma-frac gamma-large gamma-int random)
