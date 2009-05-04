@@ -23,7 +23,7 @@
     (values (float (mean lst))
 	    (float (var lst)))))
 
-(defvar *n* (* 1000 1000))
+(defvar *n* (* 100 1000 1000))
 (defun test-gamma-speed (&optional (n *n*))
   (time (dotimes (i n)
 	  (random-gamma1 2.4d0 0.5d0))))
