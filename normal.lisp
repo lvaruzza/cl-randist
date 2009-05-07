@@ -259,8 +259,8 @@
 
     (+ (* sign sigma x) mean)))
 
+(declaim (ftype (function (&optional double-float double-float) double-float) random-normal))
 (declaim (inline random-normal))
-
 (defun random-normal (&optional (mean 0d0) (sigma 1d0))
   "Generate random variable with normal distribution using ziggurat method"
   (random-normal-ziggurat (coerce mean 'double-float)
@@ -303,7 +303,7 @@ gsl_ran_bivariate_gaussian (const gsl_rng * r,
 
 I need a good test for this one.
 "
-        (let* ((u (- 1.0 (+ (* 2.0 (random 1.0d0)))))
+        (let* ((u (- 1.0d0 (+ (* 2.0d0 (random 1.0d0)))))
                ;; give me a pair of random numbers from the built-in
                ;; uniform random number generator
                ;;
@@ -313,10 +313,10 @@ I need a good test for this one.
                ;; the next two terms test to see if the pair is
                ;; within the unit circle
                (radius (+ (* u u) (* v v)))
-               (scale (sqrt (/ (* -2.0 (log radius)) radius))))
+               (scale (sqrt (/ (* -2.0d0 (log radius)) radius))))
           ;; if this pair is not within the unit circle, try again
-          (cond ((or (not (<= radius 1.0))
-                     (= radius 0.0))
+          (cond ((or (not (<= radius 1.0d0))
+                     (= radius 0.0d0))
                  (if (< tries error-limit)
                      ;; increment the number of tries
                      ;;
@@ -328,8 +328,9 @@ I need a good test for this one.
                 ;; otherwise return the two values, calculated as in
                 ;; the C-code above
                 (t (list (* sigma-x u scale)
-                         (* sigma-y (+ (* rho u) (* v (sqrt (- 1.0 (*
-                                                                    rho
-                                                                    rho)))))
-                                                                    scale))))))
+                         (* sigma-y (+ (* rho u)
+				       (* v
+					  (sqrt (- 1.0d0
+						   (* rho rho)))))
+			    scale))))))
 
