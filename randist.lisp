@@ -14,6 +14,8 @@
 (declaim (ftype (function () double-float) random-pos))
 (declaim (inline random-pos))
 (defun random-pos ()
+  "Create the sign, i.e. random positive or negative, similar to a
+binary result."
   (let ((y 0d0))
     (tagbody
      start
