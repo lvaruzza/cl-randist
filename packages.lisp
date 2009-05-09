@@ -48,4 +48,7 @@
 
    ;; Cut-point method for discrete distributions
    make-discrete-monotone-random-var
+
+   ;;  MT imple
+   *mt-random-state* make-mt-random-state random-mt
    ))
