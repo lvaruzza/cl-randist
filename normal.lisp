@@ -217,9 +217,9 @@
   (let ((i 0) (j 0) (sign 0) (x 0d0) (y 0d0))
     (declare (double-float mean sigma))
     (declare (double-float x y))
-    (declare ((SIMPLE-ARRAY SINGLE-FLOAT (128)) *ytab*)) 
-    (declare ((SIMPLE-ARRAY SINGLE-FLOAT (128)) *wtab*)) 
-    (declare ((SIMPLE-ARRAY fixnum (128)) *ktab*))
+    (declare ((simple-array double-float (128)) *ytab*)) 
+    (declare ((simple-array double-float (128)) *wtab*)) 
+    (declare ((simple-array fixnum (128)) *ktab*))
     ;;(declare ((integer 32) i j sign))
 
     (tagbody
