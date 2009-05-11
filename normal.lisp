@@ -271,7 +271,12 @@
 ;; Contributed by Joel J. Adamson <adamsonj@email.unc.edu>
 ;;
 
-(defun random-normal-bivariate (sigma-x sigma-y &key (rho 0.0) (error-limit 500) (tries 0))
+(declaim (ftype (function (double-float
+			   double-float
+			   &key (rho  double-float)
+			   (error-limit integer)
+			   (tries  integer)) double-float) random-normal-bivariate))
+(defun random-normal-bivariate (sigma-x sigma-y &key (rho 0.0d0) (error-limit 500) (tries 0))
  "Return a pair of numbers with specific correlation coefficent rho
 and with specified variances sigma-x and sigma-y; a direct port of
 gsl_ran_bivariate_gaussian from the GNU Scientific Library:
