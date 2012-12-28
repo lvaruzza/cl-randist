@@ -31,7 +31,8 @@
 (declaim (double-float +R+))
 
 ;; tabulated values for the heigt of the Ziggurat levels
-
+(declaim (type (simple-array double-float (128))
+               *ytab* *wtab*))
 (defparameter *ytab*
   (make-array 128 :element-type 'double-float :adjustable nil :fill-pointer nil
 	      :initial-contents
@@ -70,42 +71,44 @@
 
 ;; tabulated values for 2^24 times x[i]/x[i+1] 
 ;; used to accept for U*x[i+1]<=x[i] without any floating point operations 
+(declaim (type (simple-array (integer 0 16634980) (128)) *ktab*))
 (defparameter *ktab*
-  (make-array 128 :element-type 'fixnum :adjustable nil :fill-pointer nil
-	      :initial-contents
-	      '(
-		0  12590644  14272653  14988939 
-		15384584  15635009  15807561  15933577 
-		16029594  16105155  16166147  16216399 
-		16258508  16294295  16325078  16351831 
-		16375291  16396026  16414479  16431002 
-		16445880  16459343  16471578  16482744 
-		16492970  16502368  16511031  16519039 
-		16526459  16533352  16539769  16545755 
-		16551348  16556584  16561493  16566101 
-		16570433  16574511  16578353  16581977 
-		16585398  16588629  16591685  16594575 
-		16597311  16599901  16602354  16604679 
-		16606881  16608968  16610945  16612818 
-		16614592  16616272  16617861  16619363 
-		16620782  16622121  16623383  16624570 
-		16625685  16626730  16627708  16628619 
-		16629465  16630248  16630969  16631628 
-		16632228  16632768  16633248  16633671 
-		16634034  16634340  16634586  16634774 
-		16634903  16634972  16634980  16634926 
-		16634810  16634628  16634381  16634066 
-		16633680  16633222  16632688  16632075 
-		16631380  16630598  16629726  16628757 
-		16627686  16626507  16625212  16623794 
-		16622243  16620548  16618698  16616679 
-		16614476  16612071  16609444  16606571 
-		16603425  16599973  16596178  16591995 
-		16587369  16582237  16576520  16570120 
-		16562917  16554758  16545450  16534739 
-		16522287  16507638  16490152  16468907 
-		16442518  16408804  16364095  16301683 
-		16207738  16047994  15704248  15472926)))
+  (make-array 128 :element-type '(integer 0 16634980)
+                  :adjustable nil :fill-pointer nil
+                  :initial-contents
+                  '(
+                    0         12590644  14272653  14988939 
+                    15384584  15635009  15807561  15933577 
+                    16029594  16105155  16166147  16216399 
+                    16258508  16294295  16325078  16351831 
+                    16375291  16396026  16414479  16431002 
+                    16445880  16459343  16471578  16482744 
+                    16492970  16502368  16511031  16519039 
+                    16526459  16533352  16539769  16545755 
+                    16551348  16556584  16561493  16566101 
+                    16570433  16574511  16578353  16581977 
+                    16585398  16588629  16591685  16594575 
+                    16597311  16599901  16602354  16604679 
+                    16606881  16608968  16610945  16612818 
+                    16614592  16616272  16617861  16619363 
+                    16620782  16622121  16623383  16624570 
+                    16625685  16626730  16627708  16628619 
+                    16629465  16630248  16630969  16631628 
+                    16632228  16632768  16633248  16633671 
+                    16634034  16634340  16634586  16634774 
+                    16634903  16634972  16634980  16634926 
+                    16634810  16634628  16634381  16634066 
+                    16633680  16633222  16632688  16632075 
+                    16631380  16630598  16629726  16628757 
+                    16627686  16626507  16625212  16623794 
+                    16622243  16620548  16618698  16616679 
+                    16614476  16612071  16609444  16606571 
+                    16603425  16599973  16596178  16591995 
+                    16587369  16582237  16576520  16570120 
+                    16562917  16554758  16545450  16534739 
+                    16522287  16507638  16490152  16468907 
+                    16442518  16408804  16364095  16301683 
+                    16207738  16047994  15704248  15472926)))
 
 ;; tabulated values of 2^{-24}*x[i] 
 (defparameter *wtab*
@@ -188,7 +191,7 @@
 ;;   return sign * sigma * x;
 ;;}
 
-(declaim (ftype (function (double-float double-float) double-float) random-normal-ziggurat))
+(declaim (ftype (function (double-float double-float) (values double-float &optional)) random-normal-ziggurat))
 
 (defun random-normal-ziggurat (mean sigma)
 " This routine is based on the following article, with a couple of
@@ -213,51 +216,33 @@
 
   See also Leong et al, 'A Comment on the Implementation of the
   Ziggurat Method', Journal of Statistical Software, vol 5 (2005), no 7."
-
-  (let ((i 0) (j 0) (sign 0) (x 0d0) (y 0d0))
-    (declare (double-float mean sigma))
-    (declare (double-float x y))
-    (declare ((simple-array double-float (128)) *ytab*)) 
-    (declare ((simple-array double-float (128)) *wtab*)) 
-    (declare ((simple-array fixnum (128)) *ktab*))
-    ;;(declare ((integer 32) i j sign))
-
-    (tagbody
-     try-again
-       (setf i (random 256))
-       (setf j (random 16777216))
-       ;;(format t "~a  ~b~%" i  i)
-       ;; Sign is the 8th bit of i
-       (setf sign (if (ldb-test (byte 1 7) i) 1 -1))
-       ;; Zerify the 8th bit of i
-       (setf (ldb (byte 1 7) i) 0)
-       ;;(print (list i j sign))
-       ;;(format t "~b~%" i)
-       (setf x (* j (coerce (aref *wtab* i) 'double-float)))
-
-       ;; Accept x
-       (when (< j (aref *ktab* i))
-	 (go end))
-
-       (if (< i 127)
-	   (let ((y0 (aref *ytab* i))
-		 (y1 (aref *ytab* (1+ i)))
-		 (U1 (random-uniform)))
-	     (setf y (+ y1 (* (- y0 y1) U1))))
-
-	   (let ((U1 (random-pos))
-		 (U2 (random-uniform)))
-	     (setf x (/ (- +R+ (log U1)) +R+))
-	     (setf y (* (exp (- (* +R+ (- x (/ +R+ 2))))) U2))))
-
-       ;; Acccept x
-       (when (< y (exp (- (/ (* x x) 2))))
-	 (go end))
-       
-       (go try-again)
-     end)
-
-    (+ (* sign sigma x) mean)))
+  (let ((ytab (load-time-value *ytab* t))
+        (wtab (load-time-value *wtab* t))
+        (ktab (load-time-value *ktab* t)))
+    (flet ((N01 ()
+             (loop
+              (let* ((i (random 256))
+                     (j (random 16777216))
+                     ;; -1 if (logbitp 7 i), 1 otherwise
+                     (sign (float (- 1 (logandc2 (ash i -6) 1)) 1d0))
+                     (i (mod i 128))
+                     (x (* j (aref wtab i)))
+                     (y 0d0))
+                (when (< j (aref ktab i))
+                  (return (* x sign)))
+                (if (< i 127)
+                    (let ((y0 (aref ytab i))
+                          (y1 (aref ytab (1+ i)))
+                          (U1 (random-uniform)))
+                      (setf y (+ y1 (* (- y0 y1) U1))))
+                    (let ((U1 (random-pos))
+                          (U2 (random-uniform)))
+                      (setf x (/ (- +R+ (log U1)) +R+)
+                            y (* (exp (- (* +R+ (- x (/ +R+ 2)))))
+                                 U2))))
+                (when (< y (exp (- (/ (* x x) 2))))
+                  (return (* x sign)))))))
+      (+ (* sigma (N01)) mean))))
 
 (declaim (ftype (function (&optional double-float double-float) double-float) random-normal))
 (declaim (inline random-normal))
