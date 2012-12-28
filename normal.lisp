@@ -273,9 +273,11 @@
 
 (declaim (ftype (function (double-float
 			   double-float
-			   &key (rho  double-float)
-			   (error-limit integer)
-			   (tries  integer)) double-float) random-normal-bivariate))
+			   &key (:rho double-float)
+                                (:error-limit unsigned-byte)
+                                (:tries unsigned-byte))
+                          (values double-float double-float &optional))
+                random-normal-bivariate))
 (defun random-normal-bivariate (sigma-x sigma-y &key (rho 0.0d0) (error-limit 500) (tries 0))
  "Return a pair of numbers with specific correlation coefficent rho
 and with specified variances sigma-x and sigma-y; a direct port of
@@ -285,7 +287,7 @@ void
 gsl_ran_bivariate_gaussian (const gsl_rng * r,
                            double sigma_x, double sigma_y, double rho,
                            double *x, double *y)
-{
+\{
  double u, v, r2, scale;
 
  do
@@ -326,16 +328,18 @@ I need a good test for this one.
                      ;; increment the number of tries
                      ;;
                      ;; tries should not be specified by the user
-                     (random-normal-bivariate sigma-x sigma-y :rho rho
-                                         :tries (incf tries))
+                     (random-normal-bivariate sigma-x sigma-y
+                                              :rho rho
+                                              :tries (1+ tries)
+                                              :error-limit error-limit)
                      ;; too many tries --- sorry!
                      (error "Unsuccessful bivariate-gaussian after ~S tries" tries)))
                 ;; otherwise return the two values, calculated as in
                 ;; the C-code above
-                (t (list (* sigma-x u scale)
-                         (* sigma-y (+ (* rho u)
-				       (* v
-					  (sqrt (- 1.0d0
-						   (* rho rho)))))
-			    scale))))))
+                (t (values (* sigma-x u scale)
+                           (* sigma-y (+ (* rho u)
+                                         (* v
+                                            (sqrt (- 1.0d0
+                                                     (* rho rho)))))
+                              scale))))))
 
