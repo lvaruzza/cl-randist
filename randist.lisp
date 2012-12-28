@@ -20,13 +20,10 @@
 (defun random-pos ()
   "Create the sign, i.e. random positive or negative, similar to a
 binary result."
-  (let ((y 0d0))
-    (tagbody
-     start
-       (setf y (random-uniform))
-       (when (= y 0d0)
-	 (go start)))
-    y))
+  (loop
+   (let ((y (random-uniform)))
+     (when (> y 0d0)
+       (return y)))))
 
 (defun random-vector-iid (n variable)
   "Return a vector with n IID instances of variable"
