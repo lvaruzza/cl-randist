@@ -27,10 +27,10 @@ binary result."
 
 (defun random-vector-iid (n variable)
   "Return a vector with n IID instances of variable"
-  (let ((output (make-array n :element-type 'double-float :adjustable nil :fill-pointer nil)))
-    (loop for i from 0 to (1- n)
-       do (setf (aref output i) (funcall variable)))
-    output))
+  (map-into (make-array n :element-type 'double-float
+                          :adjustable nil
+                          :fill-pointer nil)
+            variable))
 
 (defun random-bernoulli (p)
   (if (> (random-uniform) p)
