@@ -1,18 +1,22 @@
 (in-package :randist)
 
 ;; On CMUCL or SBCL the random already uses mersene twister
+;; ... why is jmt.lisp compiled in then? - PVK
 #+(or sbcl cmucl)
 (progn
   (declaim (inline random-mt))
   (defun random-mt (x &optional (state *random-state*))
     (random x state)))
 
+;; either this is [0, 1), or it's broken. - PVK
 (defmacro random-uniform ()
   "[syntax suggar] Random variable with uniform distribution in interval [0,1]"
   `(random-mt 1d0))
 
-(declaim (ftype (function () double-float) random-pos))
-(declaim (inline random-pos))
+(declaim (ftype (function () (values (double-float (0d0) (1d0))
+                                     &optional))
+                random-pos)
+         (inline random-pos))
 (defun random-pos ()
   "Create the sign, i.e. random positive or negative, similar to a
 binary result."
