@@ -272,13 +272,12 @@
 ;;
 
 (declaim (ftype (function (double-float
-			   double-float
-			   &key (:rho double-float)
-                                (:error-limit unsigned-byte)
-                                (:tries unsigned-byte))
+                           double-float
+                           &key (:rho (double-float -1d0 1d0))
+                                (:error-limit (and unsigned-byte fixnum)))
                           (values double-float double-float &optional))
                 random-normal-bivariate))
-(defun random-normal-bivariate (sigma-x sigma-y &key (rho 0.0d0) (error-limit 500) (tries 0))
+(defun random-normal-bivariate (sigma-x sigma-y &key (rho 0.0d0) (error-limit 500))
  "Return a pair of numbers with specific correlation coefficent rho
 and with specified variances sigma-x and sigma-y; a direct port of
 gsl_ran_bivariate_gaussian from the GNU Scientific Library:
@@ -310,36 +309,31 @@ gsl_ran_bivariate_gaussian (const gsl_rng * r,
 
 I need a good test for this one.
 "
-        (let* ((u (- 1.0d0 (+ (* 2.0d0 (random 1.0d0)))))
-               ;; give me a pair of random numbers from the built-in
-               ;; uniform random number generator
-               ;;
-               ;; dividing by 100.0 ensures that I get a number
-               ;; between 0 and 1
-               (v (- 1.0 (+ (* 2.0 (random 1.0d0)))))
-               ;; the next two terms test to see if the pair is
-               ;; within the unit circle
-               (radius (+ (* u u) (* v v)))
-               (scale (sqrt (/ (* -2.0d0 (log radius)) radius))))
-          ;; if this pair is not within the unit circle, try again
-          (cond ((or (not (<= radius 1.0d0))
-                     (= radius 0.0d0))
-                 (if (< tries error-limit)
-                     ;; increment the number of tries
-                     ;;
-                     ;; tries should not be specified by the user
-                     (random-normal-bivariate sigma-x sigma-y
-                                              :rho rho
-                                              :tries (1+ tries)
-                                              :error-limit error-limit)
-                     ;; too many tries --- sorry!
-                     (error "Unsuccessful bivariate-gaussian after ~S tries" tries)))
-                ;; otherwise return the two values, calculated as in
-                ;; the C-code above
-                (t (values (* sigma-x u scale)
-                           (* sigma-y (+ (* rho u)
-                                         (* v
-                                            (sqrt (- 1.0d0
-                                                     (* rho rho)))))
-                              scale))))))
+  (let ((state *random-state*))
+    (loop repeat error-limit do
+      (let* ((u (- 1.0d0 (random 2.0d0 state)))
+             ;; give me a pair of random numbers from the built-in
+             ;; uniform random number generator
+             ;;
+             ;; dividing by 100.0 ensures that I get a number
+             ;; between 0 and 1
+             (v (- 1.0 (random 2.0d0 state)))
+             ;; the next two terms test to see if the pair is
+             ;; within the unit circle
+             (radius (+ (* u u) (* v v))))
+        ;; if this pair is within the unit circle, we're done
+        (when (and (< 0d0 radius)
+                   (<= radius 1d0))
+          (let ((scale (sqrt (the (double-float -0d0)
+                                  (/ (* -2d0 (log radius)) radius)))))
+            (return
+              (values (* sigma-x u scale)
+                      (* sigma-y (+ (* rho u)
+                                    (* v
+                                       (sqrt (- 1.0d0
+                                                (* rho rho)))))
+                         scale))))))
+          finally (error "Unsuccessful ~S after ~S tries."
+                         'random-normal-bivariate
+                         error-limit))))
 
