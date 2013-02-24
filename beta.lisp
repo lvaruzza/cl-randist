@@ -28,11 +28,13 @@ The method used here is the one described in Knuth "
     (declare (double-float x1 x2))
     (/ x1 (+ x1 x2))))
 
-
-(defun density-beta (x &key (a 1.0d0) (b 1.0d0))
-  "implemented according to docstring in random-beta."
-  (* (/ (gamma-function (+ a b))
-	(*  (gamma-function a)
-	    (gamma-function b)))
-     (^ x (- a 1))
-     (^ (- 1 x) (- b 1))))
+;;
+;; TOOD: Implement gamma-funcion
+;;
+;; (defun density-beta (x &key (a 1.0d0) (b 1.0d0))
+;;   "implemented according to docstring in random-beta."
+;;   (* (/ (gamma-function (+ a b))
+;; 	(*  (gamma-function a)
+;; 	    (gamma-function b)))
+;;      (^ x (- a 1))
+;;      (^ (- 1 x) (- b 1))))

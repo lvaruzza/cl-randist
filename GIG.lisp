@@ -35,8 +35,8 @@
   the algol 60 procedure  zero  given in  richard brent, algorithms for
   minimization without derivatives, prentice - hall, inc. (1973)."
 
-  (declare (type double-float ax bx)
-	   (ftype (function (double-float) double-float) f))
+  (declare (type double-float ax bx))
+  ;;   (ftype (function (double-float) double-float) f))
 
   (let* ((a ax)
 	 (b bx)
