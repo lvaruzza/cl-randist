@@ -1,6 +1,6 @@
 (in-package :randist)
 
-(declaim (optimize (speed 3) (debug 0) (safety 3)))
+(declaim (optimize (speed 3) (debug 0) (safety 1)))
 
 (declaim (inline transfer-sign))
 
@@ -9,7 +9,7 @@
       (abs a)
       (- (abs a))))
 
-(defun zeroin (ax bx f &optional (tol double-float-epsilon))
+(defun zeroin (ax bx fun &optional (tol double-float-epsilon))
   "zero of the function  f(x)  is computed in the interval ax,bx .
 
   input..
@@ -40,8 +40,8 @@
 
   (let* ((a ax)
 	 (b bx)
-	 (fa (funcall f a))
-	 (fb (funcall f b))
+	 (fa (funcall fun a))
+	 (fb (funcall fun b))
 	 (eps double-float-epsilon)
 	 (c) (fc) (d) (e) (tol1) (xm) (s) (p) (q) (r))
     (tagbody
@@ -90,7 +90,7 @@
        (if (> (abs d) tol1)
 	 (setf b (+ b d))
 	 (setf b (+ b (transfer-sign tol1 xm))))
-       (setf fb (funcall f b))
+       (setf fb (funcall fun b))
        (when (> (* fb (/ fc (abs fc))) 0d0)
 	 (go start))
        (go swap)
