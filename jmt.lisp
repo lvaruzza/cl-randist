@@ -70,21 +70,21 @@
 (defconstant +mt-lower-mask+ #x7FFFFFFF "least significant r bits")
 
 (defstruct (mt-random-state
-	    (:constructor mt-internal-make-random-state))
+            (:constructor mt-internal-make-random-state))
   ;; Could have avoided MTI, which is an index into ARR, with a
   ;; fill pointer in ARR.  MTI more closely follows the reference
   ;; implementation.
   ;; ARR corresponts to "mt[]" in the reference implementation.
   ;; Probably should have called it MT after all.  Oh well.
-  mti					; index into ARR
-  arr)					; array of numbers
+  mti                                   ; index into ARR
+  arr)                                  ; array of numbers
 
 (labels
  ((next-seed (n) (mod (1+ (* 69069 n)) +mt-k2^32+))
   (get-hi16 (n) (logand n #xFFFF0000))
   (next-elt (n)
-	    (logior (get-hi16 n)
-		    (ash (get-hi16 (next-seed n)) -16))))
+            (logior (get-hi16 n)
+                    (ash (get-hi16 (next-seed n)) -16))))
  (defun mt-make-random-state-integer (n)
    "Use the single integer to expand into a bunch of
 integers to use as an MT-RANDOM-STATE.
@@ -94,12 +94,12 @@ MAKE-MT-RANDOM-STATE unless specific circumstances dictate otherwise."
    (mt-internal-make-random-state
     :mti +mt-n+
     :arr (make-array
-	  +mt-n+
-	  :element-type 'integer
-	  :initial-contents (do ((i 0 (1+ i))
-				 (sd n (next-seed (next-seed sd)))
-				 (lst () (cons (next-elt sd) lst)))
-				((>= i +mt-n+) (nreverse lst)))))))
+          +mt-n+
+          :element-type 'integer
+          :initial-contents (do ((i 0 (1+ i))
+                                 (sd n (next-seed (next-seed sd)))
+                                 (lst () (cons (next-elt sd) lst)))
+                                ((>= i +mt-n+) (nreverse lst)))))))
 
 (let ((some-number 0))
   (defun mt-make-random-state-random ()
@@ -108,7 +108,7 @@ random, value.
 This is mostly an internal function.  I recommend using
 MAKE-MT-RANDOM-STATE unless specific circumstances dictate otherwise."
     (mt-make-random-state-integer (+ (get-universal-time)
-				     (incf some-number)))))
+                                     (incf some-number)))))
 
 (defun make-mt-random-state (&optional state)
   "Analogous to Common Lisp's MAKE-RANDOM-STATE except that this function
@@ -118,32 +118,33 @@ AJR-comment: this version is better for statistical computations,
   since it can be used by an externally defined seed.  However, it
   must be optimized, being the core of any pseudo-stochastic
   algorithm."
+  (declare (special *mt-random-state*))
   (cond ((eq state t) (mt-make-random-state-random))
-	((null state)
-	 ;; For NIL, return a copy of the current state.
-	 (make-mt-random-state *mt-random-state*))
-	((integerp state)
-	 ;; Expand the integer STATE into controlled junk that is an
-	 ;; MT RANDOM STATE.
-	 (mt-make-random-state-integer state))
-	((typep state 'sequence)
-	 ;; It's a list or an array.  It must be of length +MT-N+, & it
-	 ;; must contain integers.  We'll create a random state object
-	 ;; using a copy of that sequence.
-	 (assert state)			; should have caught NIL earlier
-	 (assert (eql (length state) +mt-n+))
-	 (assert (not (find-if #'integerp state)))
-	 (mt-internal-make-random-state
-	  :mti 0
-	  :arr (copy-seq (coerce state 'array))))
-	((mt-random-state-p state)
-	 ;; Return a copy of state.  It is an instance of MT-RANDOM-STATE.
-	 (mt-internal-make-random-state
-	  :mti (mt-random-state-mti state)
-	  :arr (copy-seq (mt-random-state-arr state))))
-	(t
-	 ;; For anything else, error.
-	 (cerror "STATE should not have a value of ~A" state))))
+        ((null state)
+         ;; For NIL, return a copy of the current state.
+         (make-mt-random-state *mt-random-state*))
+        ((integerp state)
+         ;; Expand the integer STATE into controlled junk that is an
+         ;; MT RANDOM STATE.
+         (mt-make-random-state-integer state))
+        ((typep state 'sequence)
+         ;; It's a list or an array.  It must be of length +MT-N+, & it
+         ;; must contain integers.  We'll create a random state object
+         ;; using a copy of that sequence.
+         (assert state)                 ; should have caught NIL earlier
+         (assert (eql (length state) +mt-n+))
+         (assert (not (find-if #'integerp state)))
+         (mt-internal-make-random-state
+          :mti 0
+          :arr (copy-seq (coerce state 'array))))
+        ((mt-random-state-p state)
+         ;; Return a copy of state.  It is an instance of MT-RANDOM-STATE.
+         (mt-internal-make-random-state
+          :mti (mt-random-state-mti state)
+          :arr (copy-seq (mt-random-state-arr state))))
+        (t
+         ;; For anything else, error.
+         (cerror "STATE should not have a value of ~A" state))))
 
 (defvar *mt-random-state* (make-mt-random-state t)
   "Unlike the reference implementation, we'll initialize the random
@@ -161,47 +162,47 @@ MT-GENRAND function for clarity."
     (let (y kk)
       (setq kk 0)
       (do ()
-	  ((>= kk (- +mt-n+ +mt-m+)))
-	  (setq y (logior
-		   (logand (aref (mt-random-state-arr *mt-random-state*)
-				 kk)
-			   +mt-upper-mask+)
-		   (logand (aref (mt-random-state-arr *mt-random-state*)
-				 (1+ kk))
-			   +mt-lower-mask+)))
-	  (setf (aref (mt-random-state-arr *mt-random-state*) kk)
-		(logxor
-		 (aref (mt-random-state-arr *mt-random-state*) (+ kk +mt-m+))
-		 (ash y -1)
-		 (aref mag01 (logand y 1))))
-	  (incf kk))
+          ((>= kk (- +mt-n+ +mt-m+)))
+          (setq y (logior
+                   (logand (aref (mt-random-state-arr *mt-random-state*)
+                                 kk)
+                           +mt-upper-mask+)
+                   (logand (aref (mt-random-state-arr *mt-random-state*)
+                                 (1+ kk))
+                           +mt-lower-mask+)))
+          (setf (aref (mt-random-state-arr *mt-random-state*) kk)
+                (logxor
+                 (aref (mt-random-state-arr *mt-random-state*) (+ kk +mt-m+))
+                 (ash y -1)
+                 (aref mag01 (logand y 1))))
+          (incf kk))
       (do ()
-	  ((>= kk (- +mt-n+ 1)))
-	  (setq y (logior
-		   (logand 
-		    (aref (mt-random-state-arr *mt-random-state*) kk)
-		    +mt-upper-mask+)
-		   (logand
-		    (aref (mt-random-state-arr *mt-random-state*) (1+ kk))
-		    +mt-lower-mask+)))
-	  (setf (aref (mt-random-state-arr *mt-random-state*) kk)
-		(logxor (aref (mt-random-state-arr *mt-random-state*)
-			      (+ kk (- +mt-m+ +mt-n+)))
-			(ash y -1)
-			(aref mag01 (logand y 1))))
-	  (incf kk))
+          ((>= kk (- +mt-n+ 1)))
+          (setq y (logior
+                   (logand 
+                    (aref (mt-random-state-arr *mt-random-state*) kk)
+                    +mt-upper-mask+)
+                   (logand
+                    (aref (mt-random-state-arr *mt-random-state*) (1+ kk))
+                    +mt-lower-mask+)))
+          (setf (aref (mt-random-state-arr *mt-random-state*) kk)
+                (logxor (aref (mt-random-state-arr *mt-random-state*)
+                              (+ kk (- +mt-m+ +mt-n+)))
+                        (ash y -1)
+                        (aref mag01 (logand y 1))))
+          (incf kk))
       (setq y (logior
-	       (logand
-		(aref (mt-random-state-arr *mt-random-state*) (- +mt-n+ 1))
-		+mt-upper-mask+)
-	       (logand
-		(aref (mt-random-state-arr *mt-random-state*) 0)
-		+mt-lower-mask+)))
+               (logand
+                (aref (mt-random-state-arr *mt-random-state*) (- +mt-n+ 1))
+                +mt-upper-mask+)
+               (logand
+                (aref (mt-random-state-arr *mt-random-state*) 0)
+                +mt-lower-mask+)))
       (setf (aref (mt-random-state-arr *mt-random-state*) (- +mt-n+ 1))
-	    (logxor
-	     (aref (mt-random-state-arr *mt-random-state*) (- +mt-m+ 1))
-	     (ash y -1)
-	     (aref mag01 (logand y 1))))
+            (logxor
+             (aref (mt-random-state-arr *mt-random-state*) (- +mt-m+ 1))
+             (ash y -1)
+             (aref mag01 (logand y 1))))
       (setf (mt-random-state-mti *mt-random-state*) 0))
     'mt-refill))
 
@@ -223,7 +224,7 @@ MT-GENRAND function for clarity."
     (when (>= (mt-random-state-mti *mt-random-state*) +mt-n+)
       (mt-refill))
     (let ((y (aref (mt-random-state-arr *mt-random-state*)
-		   (mt-random-state-mti *mt-random-state*))))
+                   (mt-random-state-mti *mt-random-state*))))
       (incf (mt-random-state-mti *mt-random-state*))
       ;; The following separate, explicit SETQ & other expressions
       ;; could be compacted/optimized into a single arithmetic expression
@@ -232,9 +233,9 @@ MT-GENRAND function for clarity."
       ;; the statements in the C program, mt19937int.c.
       (setq y (logxor y (mt-tempering-shift-u y)))
       (setq y (logxor y (logand (mt-tempering-shift-s y)
-				mt-tempering-mask-b)))
+                                mt-tempering-mask-b)))
       (setq y (logxor y (logand (mt-tempering-shift-t y)
-				mt-tempering-mask-c)))
+                                mt-tempering-mask-c)))
       (setq y (logxor y (mt-tempering-shift-l y)))
       y)))
 
@@ -247,10 +248,10 @@ MT-GENRAND function for clarity."
     (setq *mt-random-state* (make-mt-random-state state)))
   (if (integerp n)
       (mod (do ((bits-needed  (log n 2)                             )
-		(bit-count            0             (+ 32 bit-count))
-		(r                    0  (+ (ash r 32) (mt-genrand))))
-	       ((>= bit-count bits-needed) r))
-	   n)
+                (bit-count            0             (+ 32 bit-count))
+                (r                    0  (+ (ash r 32) (mt-genrand))))
+               ((>= bit-count bits-needed) r))
+           n)
     (* (mt-genrand) +mt-k-inverse-2^32f+ n)))
 
 ;;; --- end of file ---
