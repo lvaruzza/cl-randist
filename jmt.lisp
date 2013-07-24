@@ -79,6 +79,11 @@
   mti                                   ; index into ARR
   arr)                                  ; array of numbers
 
+(defmethod print-object ((obj mt-random-state) stream)
+  (if *print-readably*
+      (call-next-method)
+      (print-unreadable-object (obj stream :type t :identity t))))
+
 (labels
  ((next-seed (n) (mod (1+ (* 69069 n)) +mt-k2^32+))
   (get-hi16 (n) (logand n #xFFFF0000))
