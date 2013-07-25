@@ -119,6 +119,15 @@ MAKE-MT-RANDOM-STATE unless specific circumstances dictate otherwise."
   "Analogous to Common Lisp's MAKE-RANDOM-STATE except that this function
 works on random states for JMT's Mersenne Twister implementation.
 
+Optional state argument is interpreted as follows:
+if T -- make a new random state.
+if NIL -- return a copy of the current value of *MT-RANDOM-STATE*
+if an integer -- return a random state created by expanding the 
+    integer to a full random state
+if a list or array -- create a new random state object using a copy of 
+   that sequence. CF MT-INTERNAL-MAKE-RANDOM-STATE
+if a random state -- return a copy of the input state.
+
 AJR-comment: this version is better for statistical computations,
   since it can be used by an externally defined seed.  However, it
   must be optimized, being the core of any pseudo-stochastic
