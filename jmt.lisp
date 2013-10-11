@@ -84,6 +84,10 @@
       (call-next-method)
       (print-unreadable-object (obj stream :type t :identity t))))
 
+(defmethod make-load-form ((obj mt-random-state) &optional environment)
+  (declare (ignore environment))
+  (make-load-form-saving-slots obj :slot-names '(mti arr)))    
+
 (labels
  ((next-seed (n) (mod (1+ (* 69069 n)) +mt-k2^32+))
   (get-hi16 (n) (logand n #xFFFF0000))
