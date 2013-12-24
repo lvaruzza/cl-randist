@@ -2,11 +2,11 @@
 
 ;; On CMUCL or SBCL the random already uses mersene twister
 ;; ... why is jmt.lisp compiled in then? - PVK
-#+(or sbcl cmucl)
-(progn
-  (declaim (inline random-mt))
-  (defun random-mt (x &optional (state *random-state*))
-    (random x state)))
+;; #+(or sbcl cmucl)
+;; (progn
+;;   (declaim (inline random-mt))
+;;   (defun random-mt (x &optional (state *random-state*))
+;;     (random x state)))
 
 ;; either this is [0, 1), or it's broken. - PVK
 (defmacro random-uniform ()
