@@ -1,4 +1,4 @@
-version=0.4.3
+version=0.4.4
 if [ -d cl-randist-$version ]; then
   rm -Rf cl-randist-$version
 fi

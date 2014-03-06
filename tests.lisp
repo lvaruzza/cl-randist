@@ -6,8 +6,8 @@
   (loop for i from 1 to n
        collect (funcall f i)))
 
-(defun gen-uniform (&optional (n 100) (max 1.0))
-  (genlist #'(lambda (x) (declare (ignore x)) (random max)) n))
+(defun gen-uniform (&optional (n 100))
+  (genlist #'(lambda (x) (declare (ignore x)) (random-uniform)) n))
 
 
 ;;(defun gen-uniform-mt (&optional (n 100) (max 1.0))
@@ -28,6 +28,7 @@
   (time (dotimes (i n)
           (random-gamma1 2.4d0 0.5d0))))
 
+
 (defun test-gamma-mt-speed (&optional (n *n*))
   (time (dotimes (i n)
           (random-gamma-mt 2.4d0 0.5d0))))
@@ -40,6 +41,12 @@
   (test-dist #'(lambda (x)
                  (declare (ignore x))
                  (random-binomial 0.3d0 10)) n))
+
+
+(defun test-random-uniform-jmt (&optional (n *n*))
+  (test-dist #'(lambda (x)
+                 (declare (ignore x))
+                 (random-uniform-jmt)) n))
 
 #+sbcl
 (defun profile-gamma (&optional (n (* 100 1000)))

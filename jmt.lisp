@@ -236,26 +236,28 @@ MT-GENRAND function for clarity."
 (defun mt-tempering-shift-l (n)
   (mod (ash n -18) +mt-k2^32+))
 
-(let ((mt-tempering-mask-b #x9d2c5680)
-      (mt-tempering-mask-c #xefc60000))
-  (defun mt-genrand ()
-    (when (>= (mt-random-state-mti *mt-random-state*) +mt-n+)
-      (mt-refill))
-    (let ((y (aref (mt-random-state-arr *mt-random-state*)
-                   (mt-random-state-mti *mt-random-state*))))
-      (incf (mt-random-state-mti *mt-random-state*))
-      ;; The following separate, explicit SETQ & other expressions
-      ;; could be compacted/optimized into a single arithmetic expression
-      ;; that does not store into any temporary variables.  That could be
-      ;; more efficient at run-time, but I have chosen instead of immitate
-      ;; the statements in the C program, mt19937int.c.
-      (setq y (logxor y (mt-tempering-shift-u y)))
-      (setq y (logxor y (logand (mt-tempering-shift-s y)
-                                mt-tempering-mask-b)))
-      (setq y (logxor y (logand (mt-tempering-shift-t y)
-                                mt-tempering-mask-c)))
-      (setq y (logxor y (mt-tempering-shift-l y)))
-      y)))
+(defconstant +mt-tempering-mask-b+ #x9d2c5680)
+(defconstant +mt-tempering-mask-c+ #xefc60000)
+
+
+(defun mt-genrand ()
+  (when (>= (mt-random-state-mti *mt-random-state*) +mt-n+)
+    (mt-refill))
+  (let ((y (aref (mt-random-state-arr *mt-random-state*)
+		 (mt-random-state-mti *mt-random-state*))))
+    (incf (mt-random-state-mti *mt-random-state*))
+    ;; The following separate, explicit SETQ & other expressions
+    ;; could be compacted/optimized into a single arithmetic expression
+    ;; that does not store into any temporary variables.  That could be
+    ;; more efficient at run-time, but I have chosen instead of immitate
+    ;; the statements in the C program, mt19937int.c.
+    (setq y (logxor y (mt-tempering-shift-u y)))
+    (setq y (logxor y (logand (mt-tempering-shift-s y)
+			      randist::+mt-tempering-mask-b+)))
+    (setq y (logxor y (logand (mt-tempering-shift-t y)
+			      +mt-tempering-mask-c+)))
+    (setq y (logxor y (mt-tempering-shift-l y)))
+    y))
 
 (defun random-mt (n &optional state)
   "There is a bit of optimization to do..."
