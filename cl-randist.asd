@@ -5,9 +5,9 @@
 
 (defsystem :cl-randist
   :description "Random Distribution Generation"
-  :version "0.4.1"
+  :version "0.4.2"
   :author "Leonardo Varuzza <varuzza@gmail.com>"
-  :license "GPLv3"
+  :license "BSD except the optional jmt.lisp file"
   :serial t
   :components ((:file "packages")
 	       ;;  #-(or sbcl cmucl) (:file "jmt")
