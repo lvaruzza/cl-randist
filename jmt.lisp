@@ -239,7 +239,6 @@ MT-GENRAND function for clarity."
 (defconstant +mt-tempering-mask-b+ #x9d2c5680)
 (defconstant +mt-tempering-mask-c+ #xefc60000)
 
-
 (defun mt-genrand ()
   (when (>= (mt-random-state-mti *mt-random-state*) +mt-n+)
     (mt-refill))
