@@ -61,8 +61,8 @@
   (let ((k 0))
     (declare (type integer k))
     (loop 
-       for m integer = (truncate (* mu (/ 7d0 8d0)))
-       for X double-float = (random-gamma-int m)
+       for m of-type integer = (truncate (* mu (/ 7d0 8d0)))
+       for X of-type double-float = (random-gamma-int m)
        while (> mu 10)
        do (if (>= X mu)
 	      (return-from 

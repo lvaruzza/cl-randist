@@ -84,8 +84,8 @@ This is the algorithm from Knuth"
      end)
 
     (loop
-       for i integer from 0 to (- n 1)
-       for u = (random-uniform)
+       for i of-type integer from 0 to (- n 1)
+       for u of-type double-float = (random-uniform)
        when (< u p)
        do (incf k))
     k))
