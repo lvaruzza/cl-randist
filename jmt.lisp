@@ -58,6 +58,8 @@
 ;;; return (- (expt 2 68) 1) with the same frequency it returns
 ;;; any other number.
 
+(declaim (optimize (speed 3) (debug 2) (safety 2) (space 0) (compilation-speed 0)))
+
 ;;; These two constants should begin with "*mt-" to help avoid
 ;;; collisions.  (2004-Feb-07, gms)
 (defconstant +mt-k2^32+ (expt 2 32))
@@ -76,8 +78,8 @@
   ;; implementation.
   ;; ARR corresponts to "mt[]" in the reference implementation.
   ;; Probably should have called it MT after all.  Oh well.
-  mti                                   ; index into ARR
-  arr)                                  ; array of numbers
+  (mti 0 :type (unsigned-byte 32)) ; index into ARR
+  (arr (error "Unsupplied.") :type (simple-array (unsigned-byte 32)))) ; array of numbers
 
 (defmethod print-object ((obj mt-random-state) stream)
   (if *print-readably*
@@ -94,6 +96,7 @@
   (next-elt (n)
             (logior (get-hi16 n)
                     (ash (get-hi16 (next-seed n)) -16))))
+  (declare (ftype (function ((unsigned-byte 32)) (unsigned-byte 32)) next-seed))
  (defun mt-make-random-state-integer (n)
    "Use the single integer to expand into a bunch of
 integers to use as an MT-RANDOM-STATE.
@@ -104,7 +107,7 @@ MAKE-MT-RANDOM-STATE unless specific circumstances dictate otherwise."
     :mti +mt-n+
     :arr (make-array
           +mt-n+
-          :element-type 'integer
+          :element-type '(unsigned-byte 32)
           :initial-contents (do ((i 0 (1+ i))
                                  (sd n (next-seed (next-seed sd)))
                                  (lst () (cons (next-elt sd) lst)))
@@ -169,7 +172,7 @@ AJR-comment: this version is better for statistical computations,
 state to a hopefully somewhat random & unique value.")
 
 (let* ((matrix-a #x9908B0DF)
-       (mag01 (coerce (list 0 matrix-a) 'vector)))
+       (mag01 (make-array 2 :initial-contents (list 0 matrix-a) :element-type '(unsigned-byte 32))))
   (defun mt-refill ()
     "In the C program mt19937int.c, there is a function called 'genrand', & in
 that function there is a block of code to execute when the mt[] array is
@@ -177,8 +180,8 @@ exhausted.  This function is that block of code.  I've removed it from my
 MT-GENRAND function for clarity."
     ;; This function is pretty much a direct translation of the C function.
     ;; In other words, you're about to see some very un-Lispy code.
-    (let (y kk)
-      (setq kk 0)
+    (let ((y 0) (kk 0))
+      (declare (type (unsigned-byte 32) y kk))
       (do ()
           ((>= kk (- +mt-n+ +mt-m+)))
           (setq y (logior
@@ -224,6 +227,8 @@ MT-GENRAND function for clarity."
       (setf (mt-random-state-mti *mt-random-state*) 0))
     'mt-refill))
 
+(declaim (inline mt-tempering-shift-u mt-tempering-shift-s mt-tempering-shift-t mt-tempering-shift-l))
+
 (defun mt-tempering-shift-u (n)
   (mod (ash n -11) +mt-k2^32+))
 
@@ -258,6 +263,10 @@ MT-GENRAND function for clarity."
 			      +mt-tempering-mask-c+)))
     (setq y (logxor y (mt-tempering-shift-l y)))
     y))
+
+;; This allows smart compiler to optimize RANDOM-MT based on surrounding context.
+;; SBCL 2.1.11 apparently makes good use of it!
+(declaim (inline random-mt))
 
 (defun random-mt (n &optional state)
   "There is a bit of optimization to do..."

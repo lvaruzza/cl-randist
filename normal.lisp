@@ -221,8 +221,8 @@
         (ktab (load-time-value *ktab* t)))
     (flet ((N01 ()
              (loop
-              (let* ((i (random-mt 256))
-                     (j (random-mt 16777216))
+              (let* ((i (the (integer 0 256) (random-mt 256)))
+                     (j (the (integer 0 16777216) (random-mt 16777216)))
                      ;; -1 if (logbitp 7 i), 1 otherwise
                      (sign (float (- 1 (logandc2 (ash i -6) 1)) 1d0))
                      (i (mod i 128))
